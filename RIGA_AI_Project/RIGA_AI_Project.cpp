@@ -10,11 +10,15 @@ using namespace cv;
 
 int main()
 {
-	Mat img = imread("image1-1.jpg");
+	cv::setBreakOnError(true);
+	Mat img = imread("image1-1.tif");
+	Mat img2 = imread("image1prime.tif");
+	
+	Mat subt_img = abs(img-img2);
+
 	namedWindow("image", WINDOW_NORMAL);
-	imshow("image", img);
+	imshow("image", subt_img);
 	waitKey(0);
-    std::cout << "Hello World!\n"; 
 	return 0;
 }
 
