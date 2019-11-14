@@ -1,4 +1,4 @@
-# RIGA_AI_Project
+# RIGA-AI Project
 Brunel University London
 CS3072 Final Year Project
 Luis Arenas, 1641591
