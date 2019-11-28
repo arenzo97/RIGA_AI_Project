@@ -19,21 +19,12 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{da53f5a1-2e29-45a9-84ae-7d323dfc612b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Models\SubtractImage">
-      <UniqueIdentifier>{457a4b8f-879f-4c48-a407-40474c564401}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Models\ImageProcess">
       <UniqueIdentifier>{03bb691e-0f2a-49d6-8d68-55907f0f0426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SubtractImageModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageToRGBArrayModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageProcessModel.h">
@@ -46,9 +37,6 @@
     </ClCompile>
     <ClCompile Include="RIGA_AI_Project.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SubtractImageModel.cpp">
-      <Filter>Models\SubtractImage</Filter>
     </ClCompile>
     <ClCompile Include="ImageProcessModel.cpp">
       <Filter>Models\ImageProcess</Filter>

@@ -158,9 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ImageProcessModel.h" />
-    <ClInclude Include="ImageToRGBArrayModel.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="SubtractImageModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageProcessModel.cpp" />
@@ -173,7 +171,6 @@
     <ClCompile Include="RIGA_AI_Project.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\OpenCV\opencv\sources\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="SubtractImageModel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

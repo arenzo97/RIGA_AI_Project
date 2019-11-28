@@ -2,10 +2,9 @@
 //
 
 #include "pch.h"
-#include "SubtractImageModel.h"
-
+#include "ImageProcessModel.h"
 #include <iostream>
-using namespace SubtractImageModel;
+
 using namespace std;
 using namespace cv;
 
