@@ -4,6 +4,11 @@
 
 using cv::Mat;
 using cv::createLineSegmentDetector;
+using namespace cv::flann;
+using cv::watershed;
+using cv::findContours;
+
+//void thresh_callback(int, void*);
 
 class SubtractImageModel
 {
@@ -27,9 +32,11 @@ class SegmentDiscsModel
 	
 	public:
 		Mat ReturnSegmentedImages();
+		void CannyImageDetect();
 	private:
 		float* CreateRetinalArray();
-		Mat ClusterSegments();
+		Mat ClusterSegments(Mat img);
+		void thresh_callback(int, void*);
 
 
 };

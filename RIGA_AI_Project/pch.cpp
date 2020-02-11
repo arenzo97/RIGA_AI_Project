@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 // pch.cpp: source file corresponding to pre-compiled header; necessary for compilation to succeed
 
 #include "pch.h"
