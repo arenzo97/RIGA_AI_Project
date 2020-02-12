@@ -2,14 +2,13 @@
 
 
 
-int RServe_FunctionCall(vector<float> radius)
+int RFunctions::RServe_FunctionCall(vector<float> radius)
 {
 	initsocks();
 
 	Rconnection *rc = new Rconnection();
 	int i = rc->connect();
 	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
-
 	string functionCall;
 	functionCall.append("CircleFit(");
 	/*functionCall.append(radius[i]);
@@ -52,7 +51,7 @@ int RServe_FunctionCall(vector<float> radius)
 
 
 //DEMO from RSERVE
-int RServe_Connect_Test()
+int RFunctions::RServe_Connect_Test()
 {
 	initsocks(); // this is needed for Win32 - it does nothing on unix
 

@@ -8,7 +8,8 @@ Test<-function()
 
 HierarchicalPlot<-function(idata,fitMethod)
 {
-  d <- dist(idata, method = "euclidean")
+  df = data.frame(x,y)
+  d <- dist(df, method = "euclidean")
   fit <- hclust(d, method = fitMethod)
   plot(fit)
   Hgroups <-cutree(fit,k=5)
@@ -29,5 +30,9 @@ fitSS <- function(xy,
 }
 CircleFit<-function(xList,yList)
 {
-  print("Hello World")
+  
+  for(i in xList.size())
+  {
+    
+  }
 }

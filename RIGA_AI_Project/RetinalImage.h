@@ -19,11 +19,13 @@ private:
 
 
 public:
-	RetinalImage(string imageSource);
-	Mat DisplayImage();
-private:
-	string GetFilepath(string folderFilepath);
+	//RetinalImage(string imageSource);
 	string SetFilepath(string x);
+	Mat DisplayImage();
+
+private:
+	string GetFilepath();
+
 
 };
 

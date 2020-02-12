@@ -157,6 +157,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CircleFit.h" />
+    <ClInclude Include="Cluster.h" />
     <ClInclude Include="ImageProcessModel.h" />
     <ClInclude Include="RetinalImage.h" />
     <ClInclude Include="RetinalImageMarked.h" />
@@ -164,7 +166,10 @@
     <ClInclude Include="RIGA_AI_Project.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CircleFit.cpp" />
+    <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="cxx\Rconnection.cc" />
+    <ClCompile Include="Handlers.cpp" />
     <ClCompile Include="ImageProcessModel.cpp" />
     <ClCompile Include="RetinalImage.cpp" />
     <ClCompile Include="RetinalImageMarked.cpp" />

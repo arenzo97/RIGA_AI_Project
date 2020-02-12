@@ -1,21 +1,25 @@
 #include "RetinalImage.h"
 
 
-RetinalImage::RetinalImage(string imageSource)
-{
+//RetinalImage::RetinalImage(string imageSource)
+//{
+//	SetFilepath(imageSource);
+//
+//};
 
 
-};
 Mat RetinalImage::DisplayImage()
 {
 	Mat image = imread(imageFilepath);
 	return image;
 };
-string RetinalImage::GetFilepath(string folderFilepath)
+
+string RetinalImage::GetFilepath()
 {
-	return("Hello World");
+	return imageFilepath;
 };
 string RetinalImage::SetFilepath(string x)
 {
-	return("Hello World");
+	imageFilepath = x;
+	return imageFilepath;
 };
