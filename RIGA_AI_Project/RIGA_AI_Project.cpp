@@ -1,4 +1,8 @@
 
+#include <vector>
+//#include "Rconnection.h"
+#include "sisocks.h"
+
 //#include "pch.h"
 #include "ImageProcessModel.h"
 #include <numeric>
@@ -13,8 +17,9 @@
 #include <iostream>
 #include <iterator>
 #include "RIGA_AI_Project.h"
+#include "RetinalImageMarked.h"
 
-
+#include "CircleFit.h"
 
 using namespace std;
 using namespace cv;
@@ -31,20 +36,66 @@ float Return_CentreX(float, float, float, float, float, float);
 float Return_CentreY(float, float, float, float, float, float);
 float ReturnSum(vector<float>);
 void thresh_callback(int, void*);
-
-
+void conv2(Mat src, int kernel_size);
+void print(vector<int> const &input);
 int main()
 {
-	cv::setBreakOnError(true);
+
+	initsocks();
+
+	Rconnection *rc = new Rconnection();
+	int i = rc->connect();
+	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
 	
+	
+
+	cv::setBreakOnError(true);
+	//const uchar* const table;
 
 	Mat img = imread("image1-1.tif");
 	Mat img2 = imread("image1prime.tif");
 
-	//Mat result = abs(img- img2);
-	Mat result = img;
+	Mat img3 = abs(img- img2);
+	Mat result = imread("TestImg.tif");
+	vector<int> pixelArray;
+	conv2(img3, 100);
+	uint8_t* pixelPtr = (uint8_t*)img3.data;
+	int cn = img3.channels();
+	Scalar_<uint8_t> bgrPixel;
 
-	cvtColor(result, src_gray, COLOR_BGR2GRAY);
+	vector<int>b;
+	
+	for (int i = 0; i < img3.rows; i++)
+	{
+		for (int j = 0; j < img3.cols; j++)
+		{
+			bgrPixel.val[0] = pixelPtr[i*img3.cols*cn + j * cn + 0]; // B
+			bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
+			bgrPixel.val[2] = pixelPtr[i*img3.cols*cn + j * cn + 2]; // R
+
+			b.push_back((int)bgrPixel.val[0]);
+
+
+			int* g = (int*)bgrPixel.val[1];
+			int* r = (int*)bgrPixel.val[2];
+
+			
+		}
+	}
+	//cout << b;
+	print(b);
+	
+
+
+	Rvector*data = (Rvector*)rc->eval("Test()");
+	
+	if (!data) { cout << "Error!"; delete rc; return 0; }
+	
+	cout << data << endl;
+	
+	//cout << bgrPixel;
+
+	/*cvtColor(result, src_gray, COLOR_BGR2GRAY);
 	blur(src_gray, src_gray, Size(3, 3));
 	const char* source_window = "Source";
 	namedWindow(source_window, WINDOW_NORMAL);
@@ -52,8 +103,29 @@ int main()
 	const int max_thresh = 255;
 	createTrackbar("Canny thresh:", source_window, &thresh, max_thresh, thresh_callback);
 	thresh_callback(0, 0);
-	
+	*/
 
+	CircleFit circlefit;
+	string source = "image1-1.tif";
+
+	enum imgTypes { marked, unmarked, subtracted };
+	
+	RetinalImageMarked retImgMarked;
+
+	retImgMarked.SetFilepath(source);
+	retImgMarked.SetType(marked);
+	//
+
+	Mat retresult = retImgMarked.DisplayImage();
+
+
+	const char* retinal_window = "retImage";
+	namedWindow(retinal_window, WINDOW_NORMAL);
+	imshow(retinal_window, retresult);
+
+	cout << "CircleFit class: "<< circlefit.Return_Radius(13, 5.2, 7, 68.25, 7);
+	cout << "retImgMarked type: " << retImgMarked.GetType() << endl<< "retImgMarked filepath: " << retImgMarked.GetFilepath();
+	//cout << result;
 	//namedWindow("image", WINDOW_NORMAL);
 	//imshow("image", result);
 	waitKey();
@@ -61,7 +133,40 @@ int main()
 }
 
 //Test Code
+void print(vector<int> const &input)
+{
+	for (int i = 0; i < input.size();i++) 
+	{
+		cout << input.at(i);
+	}
+}
+void conv2(Mat src, int kernel_size)
+{
+	Mat dst, kernel;
+	kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (float)(kernel_size*kernel_size);
+	const uint8_t* arr[3] = {0,0,0};
+	/// Apply filter
+	filter2D(src, dst, -1, kernel, Point(-1, -1), 0, BORDER_DEFAULT);
+	namedWindow("filter2D Demo", WINDOW_NORMAL);imshow("filter2D Demo", dst);
 
+	uint8_t* pixelPtr = (uint8_t*)dst.data;
+	int cn = dst.channels();
+	Scalar_<uint8_t> bgrPixel;
+
+	for (int i = 0; i < dst.rows; i++)
+	{
+		for (int j = 0; j < dst.cols; j++)
+		{
+			bgrPixel.val[0] = pixelPtr[i*dst.cols*cn + j * cn + 0]; // B
+			bgrPixel.val[1] = pixelPtr[i*dst.cols*cn + j * cn + 1]; // G
+			bgrPixel.val[2] = pixelPtr[i*dst.cols*cn + j * cn + 2]; // R
+
+			// do something with BGR values...
+		//	bool isEqual = (memcmp(bgrPixel, arr, MAX_DIGEST_LENGTH) == 0);
+
+		}
+	}
+}
 template <typename T>
 T FunctionCall(vector<T> data, string r_function)
 {
@@ -77,6 +182,7 @@ T FunctionCall(vector<T> data, string r_function)
 	functionCall.append(vts.str());
 	functionCall.append(")");
 }
+//
 
 void RIGA_AI_Project::RadiusTest()
 {
