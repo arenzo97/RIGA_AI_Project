@@ -21,13 +21,13 @@ float CircleFit::ReturnSum(vector<float> vector)
 	return std::accumulate(vector.begin(), vector.end(), initial);
 }
 
-float CircleFit::Return_CentreY(float suu, float suv, float svu, float svv, float suuu, float svvv)
+float Return_CentreY(float suu, float suv, float svu, float svv, float suuu, float svvv)
 {
 	float y = (svv - ((suuu * suv) / suu) / (suv - (pow(suv, 2) / suu)));
 	return y;
 }
 
-float CircleFit::Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv)
+float Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv)
 {
 	float x = (svv - ((suuu * suv) / suu) / (suv - (pow(suv, 2) / suu)));
 	return x;

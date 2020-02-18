@@ -13,18 +13,27 @@ class RetinalImage
 
 public:
 	int imageId;
-
+	
 private:
 	string imageFilepath;
+	int imgType;
+	int type;
 
 
 public:
 	//RetinalImage(string imageSource);
+	//RetinalImage();
+	//RetinalImage(char* setFilepath[], int setType);
 	string SetFilepath(string x);
+	void SetType(int _type);
+	int GetType();
+	string GetFilepath();
 	Mat DisplayImage();
 
 private:
-	string GetFilepath();
+
+	//RetinalImage();
+	
 
 
 };

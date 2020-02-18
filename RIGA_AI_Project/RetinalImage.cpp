@@ -6,11 +6,21 @@
 //	SetFilepath(imageSource);
 //
 //};
+void RetinalImage::SetType(int _type)
+{
+	type = _type;
+};
 
+
+int RetinalImage::GetType()
+{
+	return type;
+};
 
 Mat RetinalImage::DisplayImage()
 {
-	Mat image = imread(imageFilepath);
+	string imgSrc = RetinalImage::GetFilepath();
+	Mat image = imread(imgSrc);
 	return image;
 };
 
