@@ -46,25 +46,29 @@ int main()
 	Rconnection *rc = new Rconnection();
 	int i = rc->connect();
 	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
-	
-	
+
+
 
 	cv::setBreakOnError(true);
 	//const uchar* const table;
 
-	Mat img = imread("image1-1.tif");
-	Mat img2 = imread("image1prime.tif");
+	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
+	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
 
-	Mat img3 = abs(img- img2);
+	Mat img3 = abs(img - img2);
+
+	int g1[3] = {0, 0, 0};
+
 	Mat result = imread("TestImg.tif");
 	vector<int> pixelArray;
-	conv2(img3, 100);
+	conv2(img, 100);
 	uint8_t* pixelPtr = (uint8_t*)img3.data;
 	int cn = img3.channels();
 	Scalar_<uint8_t> bgrPixel;
+	vector<float> suList;
+	vector<float> svList;
 
-	vector<int>b;
-	
+
 	for (int i = 0; i < img3.rows; i++)
 	{
 		for (int j = 0; j < img3.cols; j++)
@@ -73,19 +77,51 @@ int main()
 			bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
 			bgrPixel.val[2] = pixelPtr[i*img3.cols*cn + j * cn + 2]; // R
 
-			b.push_back((int)bgrPixel.val[0]);
-
-
+			int*b = (int*)bgrPixel.val[0];
 			int* g = (int*)bgrPixel.val[1];
 			int* r = (int*)bgrPixel.val[2];
+
+			if ((g != 000000) || (r != 000000) ||( b != 0000000))
+			{
+				suList.push_back(i);
+				svList.push_back(j);
+			}
+
 
 			
 		}
 	}
-	//cout << b;
-	print(b);
-	
 
+	vector<float> suuList;
+	vector<float> suvList;
+	vector<float> svuList;
+	vector<float> svvList;
+
+	for (int i = 0; i < suList.size(); i++)
+	{
+		suuList.push_back(pow(suList[i], 2));
+		svvList.push_back(pow(svList[i], 2));
+		suvList.push_back(suList[i] * svList[i]);
+		svuList.push_back(svList[i] * suList[i]);
+
+	}
+
+	float suu = ReturnSum(suuList);
+	float svv = ReturnSum(svvList);
+	float suv = ReturnSum(suvList);
+	float svu = ReturnSum(svuList);
+
+
+	//float r = Return_Radius(13.3, 5.2, suu, svv, 7);
+	//(uc, vc, float suu, float svv, int length)
+
+	cout << "CircleFit suu: " << suu << endl;
+	cout << "CircleFit svv: " << svv << endl;
+	//cout << "CircleFit Radius: " << r << endl;
+
+	const char* img3_window = "retImage";
+	namedWindow(img3_window, WINDOW_NORMAL);
+	imshow(img3_window, img3);
 
 	Rvector*data = (Rvector*)rc->eval("Test()");
 	
@@ -119,9 +155,9 @@ int main()
 	Mat retresult = retImgMarked.DisplayImage();
 
 
-	const char* retinal_window = "retImage";
+	/*const char* retinal_window = "retImage";
 	namedWindow(retinal_window, WINDOW_NORMAL);
-	imshow(retinal_window, retresult);
+	imshow(retinal_window, retresult);*/
 
 	cout << "CircleFit class: "<< circlefit.Return_Radius(13, 5.2, 7, 68.25, 7);
 	cout << "retImgMarked type: " << retImgMarked.GetType() << endl<< "retImgMarked filepath: " << retImgMarked.GetFilepath();
