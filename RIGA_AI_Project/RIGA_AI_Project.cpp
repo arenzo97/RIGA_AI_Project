@@ -34,23 +34,34 @@ void CircleFitTest();
 float Return_Radius(float, float, float, float, int);
 float Return_CentreX(float, float, float, float, float, float);
 float Return_CentreY(float, float, float, float, float, float);
-float ReturnSum(vector<float>);
+double ReturnSum(vector<double>);
 void thresh_callback(int, void*);
 void conv2(Mat src, int kernel_size);
 void print(vector<int> const &input);
 int main()
 {
+	string source = "image1-1.tif";
+
+	enum imgTypes { marked, unmarked, subtracted };
+
+	RetinalImageMarked retImgMarked;
+
+	retImgMarked.SetFilepath(source);
+	retImgMarked.SetType(marked);
+	//
+
+	Mat retresult = retImgMarked.DisplayImage();
 
 	initsocks();
 
 	Rconnection *rc = new Rconnection();
 	int i = rc->connect();
-	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
+	const Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
 
 
 
 	cv::setBreakOnError(true);
-	//const uchar* const table;
+
 
 	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
 	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
@@ -62,11 +73,11 @@ int main()
 	Mat result = imread("TestImg.tif");
 	vector<int> pixelArray;
 	conv2(img, 100);
-	uint8_t* pixelPtr = (uint8_t*)img3.data;
+	const uint8_t* pixelPtr = (uint8_t*)img3.data;
 	int cn = img3.channels();
 	Scalar_<uint8_t> bgrPixel;
-	vector<float> suList;
-	vector<float> svList;
+	vector<double> suList;
+	vector<double> svList;
 
 
 	for (int i = 0; i < img3.rows; i++)
@@ -85,17 +96,23 @@ int main()
 			{
 				suList.push_back(i);
 				svList.push_back(j);
+
+				cout<< i << " , " << j << endl;
 			}
-
-
 			
 		}
 	}
 
-	vector<float> suuList;
-	vector<float> suvList;
-	vector<float> svuList;
-	vector<float> svvList;
+	vector<double> suuList;
+	vector<double> suvList;
+	vector<double> svuList;
+	vector<double> svvList;
+
+	vector<double> suvvList;
+	vector<double> svuuList;
+
+	vector<double> suuuList;
+	vector<double> svvvList;
 
 	for (int i = 0; i < suList.size(); i++)
 	{
@@ -104,33 +121,64 @@ int main()
 		suvList.push_back(suList[i] * svList[i]);
 		svuList.push_back(svList[i] * suList[i]);
 
+		suvvList.push_back(suList[i] * svList[i] * svList[i]);
+		svuuList.push_back(svList[i] * suList[i] * suList[i]);
+
+		suuuList.push_back(pow(suList[i], 3));
+		svvvList.push_back(pow(svList[i], 3));
+
+		
+
 	}
 
-	float suu = ReturnSum(suuList);
-	float svv = ReturnSum(svvList);
-	float suv = ReturnSum(suvList);
-	float svu = ReturnSum(svuList);
+	double suu = ReturnSum(suuList);
+	double svv = ReturnSum(svvList);
+	double suv = ReturnSum(suvList);
+	double svu = ReturnSum(svuList);
 
+	double suuu = ReturnSum(suuuList);
+	double svvv = ReturnSum(svvvList);
 
-	//float r = Return_Radius(13.3, 5.2, suu, svv, 7);
+	double suvv = ReturnSum(suvvList);
+	double svuu = ReturnSum(svuuList);
+
+	//RIGA_AI_Project j;
+
+	/*float uv = j.Return_CentreY(suu, suv, svu, svv, suuu, svvv);
+	float uc = j.Return_CentreX(suu, suv, svu, svv, suuu, svvv);
+	float r = Return_Radius(13.3, 5.2, suu, svv, suuList.size());*/
 	//(uc, vc, float suu, float svv, int length)
 
-	cout << "CircleFit suu: " << suu << endl;
-	cout << "CircleFit svv: " << svv << endl;
+
+	double d[6];
+	d[0] = suu;
+	d[1] = suv;
+	d[2] = (suuu+suvv)/2;
+
+	d[3] = svu;
+	d[4] = svv;
+	d[5] = (svvv+svuu)/2;
+
+	cout  << "d: "<< d[0] << endl << d[1] << endl << d[2] << endl << d[3] << endl << d[4] << endl<<d[5] << endl << d[6] << endl;
+	Rdouble *rd = new Rdouble(d, 6);
+	rc->assign("a", rd);
+	//const Rdouble *x = (Rdouble*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
+	const Rdouble *x = (Rdouble*)rc->eval("b<-Test3(a)");
+	cout << "R: "<< x << endl << endl;
+	//cout << "CircleFit suu: " << suu << endl;
+	//cout << "CircleFit svv: " << svv << endl;
 	//cout << "CircleFit Radius: " << r << endl;
 
 	const char* img3_window = "retImage";
 	namedWindow(img3_window, WINDOW_NORMAL);
 	imshow(img3_window, img3);
 
-	Rvector*data = (Rvector*)rc->eval("Test()");
+	const Rvector*data = (Rvector*)rc->eval("Test()");
 	
 	if (!data) { cout << "Error!"; delete rc; return 0; }
 	
 	cout << data << endl;
 	
-	//cout << bgrPixel;
-
 	/*cvtColor(result, src_gray, COLOR_BGR2GRAY);
 	blur(src_gray, src_gray, Size(3, 3));
 	const char* source_window = "Source";
@@ -142,17 +190,6 @@ int main()
 	*/
 
 	CircleFit circlefit;
-	string source = "image1-1.tif";
-
-	enum imgTypes { marked, unmarked, subtracted };
-	
-	RetinalImageMarked retImgMarked;
-
-	retImgMarked.SetFilepath(source);
-	retImgMarked.SetType(marked);
-	//
-
-	Mat retresult = retImgMarked.DisplayImage();
 
 
 	/*const char* retinal_window = "retImage";
@@ -226,16 +263,16 @@ void RIGA_AI_Project::RadiusTest()
 }
 void CircleFitTest()
 {
-	float suuu;
-	float svvv;
+	double suuu;
+	double svvv;
 
-	vector<float> suList;
-	vector<float> svList;
+	vector<double> suList;
+	vector<double> svList;
 
-	vector<float> suuList;
-	vector<float> suvList;
-	vector<float> svuList;
-	vector<float> svvList;
+	vector<double> suuList;
+	vector<double> suvList;
+	vector<double> svuList;
+	vector<double> svvList;
 
 
 
@@ -251,10 +288,10 @@ void CircleFitTest()
 
 	}
 
-	float suu = ReturnSum(suuList);
-	float svv = ReturnSum(svvList);
-	float suv = ReturnSum(suvList);
-	float svu = ReturnSum(svuList);
+	double suu = ReturnSum(suuList);
+	double svv = ReturnSum(svvList);
+	double suv = ReturnSum(suvList);
+	double svu = ReturnSum(svuList);
 
 
 	float r = Return_Radius(13.3, 5.2, suu, svv, 7);
@@ -304,9 +341,9 @@ float RIGA_AI_Project::InverseMatrix(vector<float> matrix1, vector<float> matrix
 	return 0.0;
 }
 
-float ReturnSum(vector<float> vector)
+double ReturnSum(vector<double> vector)
 {
-	float initial = 0.0;
+	double initial = 0.0;
 	return std::accumulate(vector.begin(), vector.end(), initial);
 }
 
@@ -318,7 +355,7 @@ float RIGA_AI_Project::Return_CentreY(float suu, float suv, float svu, float svv
 
 float RIGA_AI_Project::Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv)
 {
-	float x = (svv - ((suuu * suv) / suu) / (suv - (pow(suv, 2) / suu)));
+	float x = (suu - ((svvv * svu) / svv) / (svu - (pow(svu, 2) / svv)));
 	return x;
 }
 

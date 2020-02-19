@@ -9,18 +9,25 @@
 #include "Rconnection.h"
 #include "sisocks.h"
 #include <vector>
+#include "RIGA_AI_Project.h"
+
 
 
 using namespace std;
 
 
 
-//Applcation tests
+//Application tests
 bool Test_VectorToString(vector<float> radius)
 {
 
 	
 
+	return true;
+}
+
+bool DOES_READ_FROM_FILE()
+{
 	return true;
 }
 

@@ -25,6 +25,11 @@ Test2<-function(a)
   
 }
 
+Test3<-function(a)
+{
+  print(a)
+}
+
 
 HierarchicalPlot<-function(idata,fitMethod)
 {

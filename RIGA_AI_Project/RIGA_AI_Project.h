@@ -46,7 +46,7 @@ public:
 
 
 	float InverseMatrix(vector<float> matrix1, vector<float> matrix2);
-	float ReturnSum(vector<float> vector);
+	double ReturnSum(vector<double> vector);
 	float Return_CentreY(float suu, float suv, float svu, float svv, float suuu, float svvv);
 
 	float Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv);
