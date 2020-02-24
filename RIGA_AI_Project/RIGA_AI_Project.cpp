@@ -45,7 +45,7 @@ int main()
 
 	bool ut_CIRCLE_FIT_RETURN_SxRETURN = ut.CIRCLE_FIT_RETURN_SxRETURN();
 	cout << "UNIT TEST: " << ut_CIRCLE_FIT_RETURN_SxRETURN <<endl;
-	
+
 	string source = "image1-1.tif";
 
 	enum imgTypes { marked, unmarked, subtracted };
@@ -98,6 +98,9 @@ int main()
 	//cout << result;
 	//namedWindow("image", WINDOW_NORMAL);
 	//imshow("image", result);
+
+	delete rc;
+
 	waitKey();
 	return 0;
 }
@@ -358,16 +361,4 @@ float RIGA_AI_Project::Return_ImagePixelChannels(Mat img)
 {
 	
 	return 0;
-}
-
-
-bool _CIRCLE_FIT_TEST()
-{
-	CircleFit cf;
-	vector<double> suList = { -1.5,-1,-0.5,0.0,0.5,1.0,1.5 };
-	vector<double> svList = { -3.25,-3.0,-2.25,-1.0,0.75,3.0,5.75 };
-
-
-
-	return true;
 }

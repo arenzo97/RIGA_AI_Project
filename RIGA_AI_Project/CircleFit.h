@@ -23,7 +23,7 @@ public:
 	float Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv);
 	double Return_Radius(double uc, double vc, double suu, double svv, int length);
 
-	double Return_Sx(const vector<double>& coordList);
+	double Return_Sx(const vector<double>& coordList, double coordVal, int size);
 	
 	double Return_SVV(vector<double>& svList);
 	double Return_SUU(vector<double>& suList);

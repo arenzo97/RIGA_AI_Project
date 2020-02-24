@@ -37,13 +37,21 @@ bool UnitTests::CIRCLE_FIT_TEST()
 
 bool UnitTests::CIRCLE_FIT_RETURN_SxRETURN()
 {
+	CircleFit cf;
 	bool result;
-	vector<double> xList = { 0,0.5,1,1.5,2,2.5,3 };
-	vector<double> suList = { 0,0.5,1,1.5,2,2.5,1 };
+	const vector<double> xList = { 0,0.5,1,1.5,2,2.5,3 };
+	const vector<double> suList = { -1.5,-1,-0.5,0,0.5,1,1.5};
+	vector<double> sxList;
 
+	
+	
 	for (int i = 0; i < xList.size(); i++)
 	{
-		if (xList.at(i) == suList.at(i))
+		double sx;
+		sx = cf.Return_Sx(xList,xList.at(i),xList.size());
+		sxList.push_back(sx);
+		cout << "sxList.at("<< i <<")"<< "sx = " << sxList.at(i) << endl;
+		if (sxList.at(i) == suList.at(i))
 			result = true;
 		else
 			result = false;

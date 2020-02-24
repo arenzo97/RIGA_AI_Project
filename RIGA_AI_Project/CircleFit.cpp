@@ -39,10 +39,13 @@ int CircleFit::TEST_DATA()
 }
 
 
-double CircleFit::Return_Sx(const vector<double>& coordList)
+double CircleFit::Return_Sx(const vector<double>& coordList, double coordVal, int size)
 {
+	double result;
 
-	return 0;
+
+	result = coordVal - (ReturnSum(coordList)/coordList.size());
+	return result;
 }
 
 
