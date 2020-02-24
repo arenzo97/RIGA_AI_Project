@@ -1,5 +1,7 @@
 library(Rserve)
-Rserve()
+library()
+install.packages("plotrix")
+library(plotrix)
 
 Test<-function()
 {
@@ -25,10 +27,26 @@ MatrixInverse<-function(a)
   
 }
 
+ConnectionTest<-function()
+{
+  print("Connection Successful")
+}
+
 Test3<-function(a)
 {
   print(a)
 }
+
+PlotPoints<-function()
+{
+  #plot()
+  ui<-c(0,0.5,1,1.5,2,2.5,3)
+  yi<-c(0,0.25,1,2.25,4,6.25,9)
+  plot(ui,yi)
+  draw.circle(-11.839,5.1964,14.686)
+}
+PlotPoints()
+
 
 
 HierarchicalPlot<-function(idata,fitMethod)

@@ -1,0 +1,6 @@
+projectKey=RIGA_AI_Project
+serverUrl=http://localhost:9000
+serverVersion=7.9.2.30863
+dashboardUrl=http://localhost:9000/dashboard?id=RIGA_AI_Project
+ceTaskId=AXBicoR73DvzBMGQwMGP
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AXBicoR73DvzBMGQwMGP
