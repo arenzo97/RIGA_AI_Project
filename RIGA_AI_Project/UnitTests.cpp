@@ -1,22 +1,56 @@
 //RServe Tests
 //DEBUG
-
-
-#pragma comment(lib, "Ws2_32.lib")
-
-
-#include <vector>
-#include "Rconnection.h"
-#include "sisocks.h"
-#include <vector>
-#include "RIGA_AI_Project.h"
+#include "UnitTests.h"
 
 
 
 using namespace std;
 
 
+bool UnitTests::CIRCLE_FIT_TEST()
+{
+	bool testResult = false;
 
+	double suu = 0.0;
+	double svv = 0.0;
+
+	CircleFit cf;
+	vector<double> uiList = { -1.5,-1,-0.5,0.0,0.5,1.0,1.5 };
+	vector<double> viList = { -3.25,-3.0,-2.25,-1.0,0.75,3.0,5.75 };
+
+	for (int i = 0; i < uiList.size(); i++)
+	{
+		
+	}
+
+	double suRes = cf.ReturnSum(uiList);
+	double svRes = cf.ReturnSum(viList);
+
+
+
+	if (suRes == 0)
+		testResult = true;
+	
+
+	return testResult;
+}
+
+bool UnitTests::CIRCLE_FIT_RETURN_SxRETURN()
+{
+	bool result;
+	vector<double> xList = { 0,0.5,1,1.5,2,2.5,3 };
+	vector<double> suList = { 0,0.5,1,1.5,2,2.5,1 };
+
+	for (int i = 0; i < xList.size(); i++)
+	{
+		if (xList.at(i) == suList.at(i))
+			result = true;
+		else
+			result = false;
+	}
+
+	return result;
+}
 //Application tests
 bool Test_VectorToString(vector<float> radius)
 {

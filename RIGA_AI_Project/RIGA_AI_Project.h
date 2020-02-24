@@ -12,7 +12,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 //#include "RIGA_AI_Project.h"
-
+#include "CircleFit.h"
 
 #include <sstream>
 #include <iterator>
@@ -47,9 +47,9 @@ public:
 
 	float InverseMatrix(vector<float> matrix1, vector<float> matrix2);
 	double ReturnSum(vector<double> vector);
-	float Return_CentreY(float suu, float suv, float svu, float svv, float suuu, float svvv);
+	double Return_CentreY(double suu, double suv, double svu, double svv, double suuu, double svvv);
 
-	float Return_CentreX(float suu, float suv, float svu, float svv, float suuu, float svvv);
+	double Return_CentreX(double suu, double suv, double svu, double svv, double suuu, double svvv);
 
 	float Return_ImagePixelChannels(Mat img);
 };

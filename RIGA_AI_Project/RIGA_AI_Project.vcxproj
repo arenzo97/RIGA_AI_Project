@@ -164,6 +164,7 @@
     <ClInclude Include="RetinalImageMarked.h" />
     <ClInclude Include="RFunctions.h" />
     <ClInclude Include="RIGA_AI_Project.h" />
+    <ClInclude Include="UnitTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CircleFit.cpp" />
