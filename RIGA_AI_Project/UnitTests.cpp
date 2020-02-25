@@ -48,7 +48,7 @@ bool UnitTests::CIRCLE_FIT_RETURN_SxRETURN()
 	for (int i = 0; i < xList.size(); i++)
 	{
 		double sx;
-		sx = cf.Return_Sx(xList,xList.at(i),xList.size());
+		sx = cf.Return_Sx(xList,xList.at(i));
 		sxList.push_back(sx);
 		cout << "sxList.at("<< i <<")"<< "sx = " << sxList.at(i) << endl;
 		if (sxList.at(i) == suList.at(i))
