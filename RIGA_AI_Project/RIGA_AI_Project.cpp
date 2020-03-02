@@ -44,7 +44,9 @@ int main()
 	UnitTests ut;
 
 	bool ut_CIRCLE_FIT_RETURN_SxRETURN = ut.CIRCLE_FIT_RETURN_SxRETURN();
-	cout << "UNIT TEST: " << ut_CIRCLE_FIT_RETURN_SxRETURN <<endl;
+	cout << "UNIT TEST:" <<endl
+		<< "SxReturn:		" << ut_CIRCLE_FIT_RETURN_SxRETURN << endl 
+		<< "Return Hclustering Points:		" << ut.HCLUSTERING_RETURN_POINTS() << endl;
 
 	string source = "image1-1.tif";
 

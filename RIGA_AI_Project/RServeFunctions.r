@@ -49,14 +49,20 @@ PlotPoints()
 
 
 
-HierarchicalPlot<-function(idata,fitMethod)
+HierarchicalPlot<-function(xi,yi,listSize)
 {
-  df <- data.frame(idata)
-  d <- dist(df, method = "euclidean")
-  fit <- hclust(d, method = fitMethod)
-  plot(fit)
-
-  return(fit)
+  c1 <- NULL;
+    for (i in listSize)
+  {
+    x<- xi[i]
+    y<- yi[i]
+    c1 <- rbind(c1,c(x,y));
+  }
+ 
+  clusters <- hclust(dist(c1),method="single");
+  clusters <- cutree(clusters,2);
+  print(clusters);
+  plot(bc[,1],bc[,2], col = clusters);
 }
 
 

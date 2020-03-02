@@ -8,15 +8,12 @@ int RFunctions::RServe_FunctionCall(vector<float> radius)
 
 	Rconnection *rc = new Rconnection();
 	int i = rc->connect();
-	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
-	string functionCall;
-
+	const Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
 	vector<double> radiusConv;
 
 
 	for (int i = 0; i < radius.size(); i++)
 	{
-
 		radiusConv.push_back(radius[i]);
 	}
 
