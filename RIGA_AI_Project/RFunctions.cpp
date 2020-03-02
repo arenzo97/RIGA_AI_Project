@@ -10,21 +10,6 @@ int RFunctions::RServe_FunctionCall(vector<float> radius)
 	int i = rc->connect();
 	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
 	string functionCall;
-	functionCall.append("CircleFit(");
-	/*functionCall.append(radius[i]);
-	std::ostringstream vts;
-	if (!radius.empty())
-	{
-		std::copy(radius.begin(), radius.end() - 1,
-			std::ostream_iterator<int>(vts, ","));
-		vts << radius.back();
-	}
-	functioncall.append(vts.str());
-	functionCall.append(")");*/
-
-	char* c = new char[functionCall.size() + 1];
-	std::copy(functionCall.begin(), functionCall.end(), c);
-	src->eval(c);
 
 	vector<double> radiusConv;
 

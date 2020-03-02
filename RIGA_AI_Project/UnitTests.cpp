@@ -59,14 +59,18 @@ bool UnitTests::CIRCLE_FIT_RETURN_SxRETURN()
 
 	return result;
 }
-//Application tests
-bool Test_VectorToString(vector<float> radius)
+
+
+bool UnitTests::HCLUSTERING_RETURN_POINTS()
 {
+	HClustering hc;
+	bool result = false;
+	hc.Cluster();
 
-	
-
-	return true;
+	return result;
 }
+
+//Application tests
 
 bool DOES_READ_FROM_FILE()
 {

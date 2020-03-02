@@ -159,7 +159,9 @@
   <ItemGroup>
     <ClInclude Include="CircleFit.h" />
     <ClInclude Include="Cluster.h" />
+    <ClInclude Include="HClustering.h" />
     <ClInclude Include="ImageProcessModel.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RetinalImage.h" />
     <ClInclude Include="RetinalImageMarked.h" />
     <ClInclude Include="RFunctions.h" />
@@ -171,6 +173,7 @@
     <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="cxx\Rconnection.cc" />
     <ClCompile Include="Handlers.cpp" />
+    <ClCompile Include="HClustering.cpp" />
     <ClCompile Include="ImageProcessModel.cpp" />
     <ClCompile Include="RetinalImage.cpp" />
     <ClCompile Include="RetinalImageMarked.cpp" />
@@ -179,6 +182,9 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\OpenCV\opencv\sources\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="UnitTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RIGA_AI_Project.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
