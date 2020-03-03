@@ -3,5 +3,12 @@
 
 class RetinalImageMarked : public RetinalImage
 {
+private:
+
+
+private:
+
+public:
 	Mat DisplayImageSubtracted();
+
 };

@@ -1,8 +1,8 @@
 #pragma comment(lib, "Ws2_32.lib")
 //
-//#define __LITTLE_ENDIAN__ 1
-//#define _CRT_SECURE_NO_WARNINGS 1
-//#define _WINSOCK_DEPRECATED_NO_WARNINGS 1
+#define __LITTLE_ENDIAN__ 1
+#define _CRT_SECURE_NO_WARNINGS 1
+#define _WINSOCK_DEPRECATED_NO_WARNINGS 1
 
 //#include "pch.h"
 #include "ImageProcessModel.h"
@@ -18,8 +18,8 @@
 #include <iterator>
 
 //
-//#define MAIN         // we are the main program, we need to define this
-//#define SOCK_ERRORS  // we will use verbose socket errors
+#define MAIN         // we are the main program, we need to define this
+#define SOCK_ERRORS  // we will use verbose socket errors
 
 //RServe headers
 #include "Rconnection.h"

@@ -68,7 +68,7 @@ bool UnitTests::HCLUSTERING_RETURN_POINTS()
 	vector<double> d = { 0,0.5,1,1.5,2,2.5,3 };
 	HClustering hc(d,d,d.size());
 
-	vector<double> _cluster = hc.Cluster(d,d,d.size());
+	vector<double> _cluster = hc.Cluster();
 
 	if (_cluster.size() != NULL || _cluster.size() != 0) 
 	{ 

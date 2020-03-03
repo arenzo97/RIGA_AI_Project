@@ -263,3 +263,5 @@ __pycache__/
 /.scannerwork/report-task.txt
 /.scannerwork/.sonar_lock
 /.scannerwork
+/RIGA_AI_Project/.RData
+/RIGA_AI_Project/.Rhistory

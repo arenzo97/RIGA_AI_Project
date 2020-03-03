@@ -1,13 +1,15 @@
 library(Rserve)
-library()
-install.packages("plotrix")
-library(plotrix)
 
 Test<-function()
 {
   print("Hello World")
 }
 
+
+Test2<-function(a)
+{
+  return(a)
+}
 
 MatrixInverse<-function(a)
 {
@@ -37,33 +39,46 @@ Test3<-function(a)
   print(a)
 }
 
-PlotPoints<-function()
+
+
+
+TestReturnDoubleList<-function(arr)
 {
-  #plot()
-  ui<-c(0,0.5,1,1.5,2,2.5,3)
-  yi<-c(0,0.25,1,2.25,4,6.25,9)
-  plot(ui,yi)
-  draw.circle(-11.839,5.1964,14.686)
+  return(sum(arr))
+
 }
-PlotPoints()
 
 
 
-HierarchicalPlot<-function(xi,yi,listSize)
+
+TestReturnDoubleList2<-function(arr,arr2)
 {
-  c1 <- NULL;
-    for (i in listSize)
-  {
-    x<- xi[i]
-    y<- yi[i]
-    c1 <- rbind(c1,c(x,y));
-  }
- 
-  clusters <- hclust(dist(c1),method="single");
+  result = as.matrix(cbind(arr,arr2))
+  return(result)
+}
+
+arr1<-c(1,2,3)
+arr2<-c(3,2,1)
+
+TestReturnDoubleList2(arr1,arr2)
+
+
+
+
+HCluster_C<-function(xi,yi)
+{
+  
+  result = as.matrix(cbind(xi,yi))
+  
+  clusters <- hclust(dist(result),method="single");
   clusters <- cutree(clusters,2);
   print(clusters);
   plot(bc[,1],bc[,2], col = clusters);
+  
+  
+  return(sum(result[,2]));
 }
+
 
 
 fitSS <- function(xy,

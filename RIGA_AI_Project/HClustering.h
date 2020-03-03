@@ -21,9 +21,9 @@ private:
 	void SetListSize(int i);
 
 public:
-	HClustering();
+	//HClustering();
 	HClustering(vector<double> xi, vector<double> yi, int _listSize);
-	vector<double> Cluster(vector<double> xi, vector<double> yi,int _listSize);
+	vector<double> Cluster();
 
 	vector<double> TestR(vector<double> x);
 

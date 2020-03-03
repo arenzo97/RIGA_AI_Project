@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include "sisocks.h"
 #include "Rsrv.h"
+//#include <vector>
 
 typedef unsigned int Rsize_t;
 
@@ -188,7 +189,8 @@ public:
     Rdouble(Rmessage *msg) : Rexp(msg) { fix_content(); }
     Rdouble(unsigned int *ipos, Rmessage *imsg) : Rexp(ipos, imsg) { fix_content(); }
     Rdouble(double *array, int count) : Rexp(XT_ARRAY_DOUBLE, (char*)array, count*sizeof(double)) { fix_content(); }
-    
+	//Rdouble(vector<double> *vec, int count) : Rexp(XT_ARRAY_DOUBLE, (char*)vec, count * sizeof(double)) { fix_content(); }
+
     double *doubleArray() { return (double*) data; }
     double doubleAt(int pos) { return (pos>=0 && (unsigned)pos<len/8)?((double*)data)[pos]:0; }
     virtual Rsize_t length() { return len/8; }

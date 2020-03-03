@@ -12,13 +12,6 @@ int RFunctions::RServe_FunctionCall(vector<float> radius)
 	vector<double> radiusConv;
 
 
-	for (int i = 0; i < radius.size(); i++)
-	{
-		radiusConv.push_back(radius[i]);
-	}
-
-
-
 	double d[1] = { 1 };
 
 	int ia[6] = { 1, 4, 6, 3, 5 , 2 };
@@ -89,7 +82,11 @@ int RFunctions::RServe_Connect_Test()
 	double *swd = sw->doubleArray();
 
 	// and print it ...
-	{ int i = 0, ct = sw->length(); while (i < ct) { cout << swd[i++] << " "; }; cout << "\n"; }
+	{ 
+		int i = 0, ct = sw->length(); while (i < ct) 
+		{
+			cout << swd[i++] << " "; 
+		}; cout << "\n"; }
 
 
 	delete iris;

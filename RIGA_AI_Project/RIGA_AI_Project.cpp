@@ -42,11 +42,16 @@ void print(vector<int> const &input);
 int main()
 {
 	UnitTests ut;
+	//
+	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
+	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
+
+	Mat img3 = abs(img - img2);
 
 	bool ut_CIRCLE_FIT_RETURN_SxRETURN = ut.CIRCLE_FIT_RETURN_SxRETURN();
 	cout << "UNIT TEST:" <<endl
-		<< "SxReturn:		" << ut_CIRCLE_FIT_RETURN_SxRETURN << endl 
-		<< "Return Hclustering Points:		" << ut.HCLUSTERING_RETURN_POINTS() << endl;
+	<< "SxReturn:		" << ut_CIRCLE_FIT_RETURN_SxRETURN << endl 
+	<< "Return Hclustering Points:		" << ut.HCLUSTERING_RETURN_POINTS() << endl;
 
 	string source = "image1-1.tif";
 
@@ -56,27 +61,120 @@ int main()
 
 	retImgMarked.SetFilepath(source);
 	retImgMarked.SetType(marked);
-	//
+	
 
 	Mat retresult = retImgMarked.DisplayImage();
-
+	cout << "before";
 	initsocks();
+	cout << "after"<<endl ;
 
 	Rconnection *rc = new Rconnection();
-	int i = rc->connect();
-	const Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RHierarchicalCluster.r')");
+	
+	cout << "rc " << rc <<endl;
+
+	int ic = rc->connect();
+
+	cout << "i = " << ic << endl;
+	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RServeFunctions.r')");
+
+	vector<int> pixelArray;
+
+	const uint8_t* pixelPtr = (uint8_t*)img3.data;
+	int cn = img3.channels();
+	Scalar_<uint8_t> bgrPixel;
+	vector<double> xiList;
+	vector<double> yiList;
+
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	xiList.push_back(i);
+	//	yiList.push_back(i);
+	//}
+
+//	cout << xiList.at(3) <<endl;
+
+	cout << xiList.size() /*<<" " << xiList.at(10)*/ <<endl;
+	for (int i = 0; i < img3.rows; i++)
+	{
+		for (int j = 0; j < img3.cols; j++)
+		{
+			bgrPixel.val[0] = pixelPtr[i*img3.cols*cn + j * cn + 0]; // B
+			bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
+			bgrPixel.val[2] = pixelPtr[i*img3.cols*cn + j * cn + 2]; // R
+
+			int*b = (int*)bgrPixel.val[0];
+			int* g = (int*)bgrPixel.val[1];
+			int* r = (int*)bgrPixel.val[2];
+
+			if ((g != 000000) || (r != 000000) || (b != 0000000))
+			{
+				xiList.push_back(i);
+				yiList.push_back(j);
+
+				//cout << xiList.at(i) << endl;
+			}
+
+		}
+	}
+
+	double* arr1 = new double[xiList.size()];
+	double* arr2 = new double[yiList.size()];
+
+
+	
+	//cout << arr[0] << endl;
+	copy(xiList.begin(), xiList.end(), arr1);	
+	Rdouble* r_xiList = new Rdouble(arr1,xiList.size());
+
+	copy(yiList.begin(), yiList.end(), arr2);
+	Rdouble* r_yiList = new Rdouble(arr2, yiList.size());
+
+	cout << "r_xiList:	" << * r_xiList->doubleArray()<<endl;
+	cout << "r_yiList:	" << *r_yiList->doubleArray() << endl;
+
+	rc->assign("xi", r_xiList);
+	rc->assign("yi", r_yiList);
+
+	Rdouble* r_vec = (Rdouble*)rc->eval("TestReturnDoubleList2(xi,yi)");
+
+	if (r_vec)
+	{
+		double *d = r_vec->doubleArray();
+		int ci = 0, ct = r_vec->length();
+		while (ci < ct)
+		{
+			cout << d[ci++] << " " << endl;
+		}
+		delete r_vec;
+	}
+	
+
+	//cout << "r_vec:	" << r_vec <<endl;
 
 	cv::setBreakOnError(true);
 
-	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
-	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
 
-	Mat img3 = abs(img - img2);
 	conv2(img, 100);
 	int g1[3] = {0, 0, 0};
 
 	Mat result = imread("TestImg.tif");
-	//GREEN_ReturnPixels(img3)
+
+
+	CircleFit circlefit;
+	
+
+	
+	//cout << "CircleFit class: "<< circlefit.Return_Radius(13, 5.2, 7, 68.25, 7);
+	//cout << "retImgMarked type: " << retImgMarked.GetType() << endl<< "retImgMarked filepath: " << retImgMarked.GetFilepath();
+
+	delete rc;
+
+	waitKey();
+	return 0;
+}
+
+//Test Code	
+//GREEN_ReturnPixels(img3)
 	
 	/*cvtColor(result, src_gray, COLOR_BGR2GRAY);
 	blur(src_gray, src_gray, Size(3, 3));
@@ -86,28 +184,14 @@ int main()
 	const int max_thresh = 255;
 	createTrackbar("Canny thresh:", source_window, &thresh, max_thresh, thresh_callback);
 	thresh_callback(0, 0);
-	*/
-
-	CircleFit circlefit;
-	
-
+	*/	
 	/*const char* retinal_window = "retImage";
 	namedWindow(retinal_window, WINDOW_NORMAL);
-	imshow(retinal_window, retresult);*/
-
-	cout << "CircleFit class: "<< circlefit.Return_Radius(13, 5.2, 7, 68.25, 7);
-	cout << "retImgMarked type: " << retImgMarked.GetType() << endl<< "retImgMarked filepath: " << retImgMarked.GetFilepath();
+	imshow(retinal_window, retresult);*/	
 	//cout << result;
 	//namedWindow("image", WINDOW_NORMAL);
 	//imshow("image", result);
 
-	delete rc;
-
-	waitKey();
-	return 0;
-}
-
-//Test Code
 void print(vector<int> const &input)
 {
 	for (int i = 0; i < input.size();i++) 
@@ -165,8 +249,8 @@ void GREEN_ReturnPixels(Mat img3)
 	const uint8_t* pixelPtr = (uint8_t*)img3.data;
 	int cn = img3.channels();
 	Scalar_<uint8_t> bgrPixel;
-	vector<double> suList;
-	vector<double> svList;
+	vector<double> xiList;
+	vector<double> yiList;
 
 
 	for (int i = 0; i < img3.rows; i++)
@@ -183,8 +267,8 @@ void GREEN_ReturnPixels(Mat img3)
 
 			if ((g != 000000) || (r != 000000) || (b != 0000000))
 			{
-				suList.push_back(i);
-				svList.push_back(j);
+				xiList.push_back(i);
+				yiList.push_back(j);
 
 				cout << i << " , " << j << endl;
 			}
@@ -203,18 +287,18 @@ void GREEN_ReturnPixels(Mat img3)
 	vector<double> suuuList;
 	vector<double> svvvList;
 
-	for (int i = 0; i < suList.size(); i++)
+	for (int i = 0; i < xiList.size(); i++)
 	{
-		suuList.push_back(pow(suList[i], 2));
-		svvList.push_back(pow(svList[i], 2));
-		suvList.push_back(suList[i] * svList[i]);
-		svuList.push_back(svList[i] * suList[i]);
+		suuList.push_back(pow(xiList[i], 2));
+		svvList.push_back(pow(yiList[i], 2));
+		suvList.push_back(xiList[i] * yiList[i]);
+		svuList.push_back(yiList[i] * xiList[i]);
 
-		suvvList.push_back(suList[i] * svList[i] * svList[i]);
-		svuuList.push_back(svList[i] * suList[i] * suList[i]);
+		suvvList.push_back(xiList[i] * yiList[i] * yiList[i]);
+		svuuList.push_back(yiList[i] * xiList[i] * xiList[i]);
 
-		suuuList.push_back(pow(suList[i], 3));
-		svvvList.push_back(pow(svList[i], 3));
+		suuuList.push_back(pow(xiList[i], 3));
+		svvvList.push_back(pow(xiList[i], 3));
 	}
 
 	double suu = ReturnSum(suuList);
