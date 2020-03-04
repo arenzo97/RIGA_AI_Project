@@ -135,7 +135,7 @@ int main()
 	rc->assign("xi", r_xiList);
 	rc->assign("yi", r_yiList);
 
-	Rdouble* r_vec = (Rdouble*)rc->eval("TestReturnDoubleList2(xi,yi)");
+	Rdouble* r_vec = (Rdouble*)rc->eval("HCluster_C(xi,yi)");
 
 	if (r_vec)
 	{

@@ -1,5 +1,9 @@
 library(Rserve)
 
+this.dir <- dirname(parent.frame(2)$ofile)
+setwd(this.dir)
+
+
 Test<-function()
 {
   print("Hello World")
@@ -40,16 +44,11 @@ Test3<-function(a)
 }
 
 
-
-
 TestReturnDoubleList<-function(arr)
 {
   return(sum(arr))
 
 }
-
-
-
 
 TestReturnDoubleList2<-function(arr,arr2)
 {
@@ -57,26 +56,36 @@ TestReturnDoubleList2<-function(arr,arr2)
   return(result)
 }
 
-arr1<-c(1,2,3)
-arr2<-c(3,2,1)
+arr1<-c(1,2,1,1,1,10,8,9)
+arr2<-c(3,2,2,3,4,9,9,8)
 
-TestReturnDoubleList2(arr1,arr2)
+d<-HCluster_C(arr1,arr2)
+td = read.csv('test.csv', sep=",",header = FALSE)
 
-
+tdarr<-c(td$V1,td$V2)
+td<-HCluster_C(td$V1,td$V2)
 
 
 HCluster_C<-function(xi,yi)
 {
   
-  result = as.matrix(cbind(xi,yi))
+  result = cbind(xi,yi)
+  
   
   clusters <- hclust(dist(result),method="single");
   clusters <- cutree(clusters,2);
-  print(clusters);
-  plot(bc[,1],bc[,2], col = clusters);
+  df<-data.frame(clusters)
   
+  df2<-cbind(df,result)
+ # clusters <- subtree(clusters,2);
+#  print(result);
+  plot(result[,1],result[,2], col = clusters);
+#  arr1 <- clusters[,1]
+  #data[clusters$cluster==2,]
   
-  return(sum(result[,2]));
+
+  
+  return(df2);
 }
 
 
