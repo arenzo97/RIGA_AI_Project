@@ -12,7 +12,9 @@
 #include "opencv2/highgui/highgui.hpp"
 //#include "RIGA_AI_Project.h"
 
-
+#include <fstream>
+#include <vector>
+#include <string>
 #include <sstream>
 #include <iostream>
 #include <iterator>
@@ -91,12 +93,9 @@ int main()
 	//	yiList.push_back(i);
 	//}
 
-//	cout << xiList.at(3) <<endl;
-
-	cout << xiList.size() /*<<" " << xiList.at(10)*/ <<endl;
-	for (int i = 0; i < img3.rows; i++)
+	for (int i = 0; i < img3.rows -2; i++)
 	{
-		for (int j = 0; j < img3.cols; j++)
+		for (int j = 0; j < img3.cols -2; j++)
 		{
 			bgrPixel.val[0] = pixelPtr[i*img3.cols*cn + j * cn + 0]; // B
 			bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
@@ -106,7 +105,7 @@ int main()
 			int* g = (int*)bgrPixel.val[1];
 			int* r = (int*)bgrPixel.val[2];
 
-			if ((g != 000000) || (r != 000000) || (b != 0000000))
+			if ((g != 000000) || (r != 000000) || (b != 000000) )
 			{
 				xiList.push_back(i);
 				yiList.push_back(j);
@@ -116,6 +115,13 @@ int main()
 
 		}
 	}
+	ofstream out_xi("data/pixels/xi.csv");
+	for (const auto &e : xiList) out_xi << e << "\n";
+	out_xi.close();
+
+	ofstream out_yi("data/pixels/yi.csv");
+	for (const auto &e : yiList) out_yi << e << "\n";
+	out_yi.close();
 
 	double* arr1 = new double[xiList.size()];
 	double* arr2 = new double[yiList.size()];
@@ -136,6 +142,7 @@ int main()
 	rc->assign("yi", r_yiList);
 
 	Rdouble* r_vec = (Rdouble*)rc->eval("HCluster_C(xi,yi)");
+	rc->eval("");
 
 	if (r_vec)
 	{
@@ -148,25 +155,21 @@ int main()
 		delete r_vec;
 	}
 	
-
-	//cout << "r_vec:	" << r_vec <<endl;
-
 	cv::setBreakOnError(true);
 
 
-	conv2(img, 100);
-	int g1[3] = {0, 0, 0};
+	/*conv2(img, 100);
+	int g1[3] = {0, 0, 0};*/
+
+	const char* retinal_window = "retImage";
+	namedWindow(retinal_window, WINDOW_NORMAL);
+	imshow(retinal_window, img3);
 
 	Mat result = imread("TestImg.tif");
 
 
 	CircleFit circlefit;
 	
-
-	
-	//cout << "CircleFit class: "<< circlefit.Return_Radius(13, 5.2, 7, 68.25, 7);
-	//cout << "retImgMarked type: " << retImgMarked.GetType() << endl<< "retImgMarked filepath: " << retImgMarked.GetFilepath();
-
 	delete rc;
 
 	waitKey();
@@ -270,7 +273,7 @@ void GREEN_ReturnPixels(Mat img3)
 				xiList.push_back(i);
 				yiList.push_back(j);
 
-				cout << i << " , " << j << endl;
+				//cout << i << " , " << j << endl;
 			}
 
 		}
