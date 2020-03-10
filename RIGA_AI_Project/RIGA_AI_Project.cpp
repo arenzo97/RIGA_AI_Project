@@ -45,6 +45,10 @@ void print(vector<int> const &input);
 vector<vector<string>> GetFiles(const string directory);
 int main()
 {
+
+	UnitTests ut;
+
+	cout << "R.Image Tests:\n"<<ut.RETINAL_IMAGE_TEST() << endl << ut.RETINAL_IMAGE_TEST_GetImage()<< "\n-----------"<<endl;
 	//vector<string> filenames;
 	vector<vector<string>> filenames = GetFiles("images/BinRushed2/");
 
@@ -64,7 +68,7 @@ int main()
 	imshow(test_window, tst1);
 	imshow(test_window2, tst2);
 
-	UnitTests ut;
+	
 	//
 	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
 	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
@@ -157,15 +161,6 @@ vector<vector<string>> GetFiles(const string directory)
 			row.push_back(marked);
 
 			filenames.push_back(row);
-		}
-	}
-
-	for (int i = 0;i < filenames.size();i++)
-	{
-		for (int j = 0; j < filenames[i].size();j++)
-		{
-			
-			cout<< i << ", " << j <<": " << filenames[i][j] << endl;
 		}
 	}
 

@@ -7,6 +7,45 @@
 using namespace std;
 
 
+bool UnitTests::RETINAL_IMAGE_TEST()
+{
+	bool result = false;
+
+	string filePath = "images/BinRushed2/image1-1.jpg";
+
+	RetinalImage ri(filePath);
+
+	
+	if (ri.GetFilepath() == filePath)
+	{
+		result = true;
+		cout << "ri: " <<ri.GetFilepath() << endl;
+
+	}
+	return result;
+}
+
+bool UnitTests::RETINAL_IMAGE_TEST_GetImage()
+{
+	bool result = false;
+
+	string filePath = "images/BinRushed2/image1-1.jpg";
+
+	RetinalImage ri(filePath);
+
+	Mat img = ri.DisplayImage();
+
+	if (!img.empty())
+	{
+		result = true;
+		const char* test_window = "UNIT TEST RETURN IMAGE";
+		namedWindow(test_window, WINDOW_NORMAL);
+		imshow(test_window, ri.DisplayImage());
+
+	}
+	return result;
+}
+
 bool UnitTests::CIRCLE_FIT_TEST()
 {
 	bool testResult = false;

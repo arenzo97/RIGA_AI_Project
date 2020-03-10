@@ -12,18 +12,22 @@ class RetinalImage
 {
 
 public:
+	
 	int imageId;
 	
 private:
 	string imageFilepath;
 	int imgType;
 	int type;
+	Mat img;
+
 
 
 public:
-	//RetinalImage(string imageSource);
-	//RetinalImage();
-	//RetinalImage(char* setFilepath[], int setType);
+	RetinalImage();
+	RetinalImage(string imageSource);
+
+	
 	string SetFilepath(string x);
 	void SetType(int _type);
 	int GetType();
@@ -31,7 +35,8 @@ public:
 	Mat DisplayImage();
 
 private:
-
+	vector<double> setXi();
+	vector<double> setYi();
 	//RetinalImage();
 	
 

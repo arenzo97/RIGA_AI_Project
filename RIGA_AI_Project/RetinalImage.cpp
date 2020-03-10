@@ -1,5 +1,16 @@
 #include "RetinalImage.h"
 
+RetinalImage::RetinalImage()
+{
+
+};
+
+RetinalImage::RetinalImage(string imageSource)
+{
+	SetFilepath(imageSource);
+	img = imread(imageFilepath);
+};
+
 
 void RetinalImage::SetType(int _type)
 {
@@ -14,9 +25,7 @@ int RetinalImage::GetType()
 
 Mat RetinalImage::DisplayImage()
 {
-	string imgSrc = RetinalImage::GetFilepath();
-	Mat image = imread(imgSrc);
-	return image;
+	return img;
 };
 
 string RetinalImage::GetFilepath()
