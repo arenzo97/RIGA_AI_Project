@@ -8,7 +8,7 @@ RetinalImage::RetinalImage()
 RetinalImage::RetinalImage(string imageSource)
 {
 	SetFilepath(imageSource);
-	img = imread(imageFilepath);
+	img = imread(imageFilepath, IMREAD_GRAYSCALE);
 };
 
 
@@ -37,3 +37,4 @@ string RetinalImage::SetFilepath(string x)
 	imageFilepath = x;
 	return imageFilepath;
 };
+

@@ -1,14 +1,14 @@
-#include "ImageProcessModel.h"
+#include <fstream>
 #include "RetinalImage.h"
 
-class RetinalImageMarked : public RetinalImage
+class RetinalImageSubtracted : public RetinalImage
 {
-private:
-
-
-private:
-
 public:
-	Mat DisplayImageSubtracted();
+	RetinalImageSubtracted();
+	RetinalImageSubtracted(Mat prime, Mat marked);
+
+
+private:
+	void ExportToCSV(string filePath);
 
 };

@@ -15,7 +15,7 @@ public:
 	
 	int imageId;
 	
-private:
+protected:
 	string imageFilepath;
 	int imgType;
 	int type;
@@ -34,9 +34,9 @@ public:
 	string GetFilepath();
 	Mat DisplayImage();
 
-private:
-	vector<double> setXi();
-	vector<double> setYi();
+protected:
+	//void ExportToCSV();
+	
 	//RetinalImage();
 	
 

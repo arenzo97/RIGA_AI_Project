@@ -43,6 +43,8 @@ void thresh_callback(int, void*);
 void conv2(Mat src, int kernel_size);
 void print(vector<int> const &input);
 vector<vector<string>> GetFiles(const string directory);
+vector<vector<RetinalImage>> GetRetinalImages(const string directory);
+
 int main()
 {
 
@@ -52,12 +54,15 @@ int main()
 	//vector<string> filenames;
 	vector<vector<string>> filenames = GetFiles("images/BinRushed2/");
 
-
-	
-
 	Mat tst1 = imread(filenames[0][1],IMREAD_GRAYSCALE);
 	Mat tst2 = imread(filenames[0][0], IMREAD_GRAYSCALE);
+	
 
+	vector<vector<RetinalImage>> riList = GetRetinalImages("images/BinRushed2/");
+
+	RetinalImage riTest = riList[0][0];
+
+	cout<< "riList Tests : \n" << riTest.GetFilepath() <<endl;
 
 
 	const char* test_window = "6-1";
@@ -84,7 +89,7 @@ int main()
 
 	enum imgTypes { marked, unmarked, subtracted };
 
-	RetinalImageMarked retImgMarked;
+	RetinalImageSubtracted retImgMarked;
 
 	retImgMarked.SetFilepath(source);
 	retImgMarked.SetType(marked);
@@ -93,10 +98,9 @@ int main()
 
 	Mat retresult = retImgMarked.DisplayImage();
 	cout << "before";
-	initsocks();
 	cout << "after"<<endl ;
 
-
+	//Get Pixels
 	const uint8_t* pixelPtr = (uint8_t*)img3.data;
 	int cn = img3.channels();
 	Scalar_<uint8_t> bgrPixel;
@@ -122,6 +126,8 @@ int main()
 			}
 		}
 	}
+
+	//Output to CSV
 	ofstream out_xi("data/pixels/xi2.csv");
 	for (const auto &e : xiList) out_xi << e << ",\n";
 	out_xi.close();
@@ -149,6 +155,7 @@ vector<vector<string>> GetFiles(const string directory)
 
 		for (int j = 1; j < 7; j++)
 		{
+			RetinalImage ri();
 
 			vector<string> row;
 			string prime;
@@ -167,6 +174,36 @@ vector<vector<string>> GetFiles(const string directory)
 	return (filenames);
 }
 
+
+vector<vector<RetinalImage>> GetRetinalImages(const string directory)
+{
+	vector<vector<RetinalImage>> riList;
+
+	for (int i = 1; i < 10; i++)
+	{
+
+		for (int j = 1; j < 7; j++)
+		{
+			
+
+			vector<RetinalImage> row;
+			string prime;
+			string marked;
+
+			marked = directory + "image" + to_string(i) + "-" + to_string(j) + ".jpg";
+			prime = directory + "image" + to_string(i) + "prime.jpg";
+			RetinalImage ri_marked(marked);
+			RetinalImage ri_prime(prime);
+
+			row.push_back(marked);
+			row.push_back(prime);
+
+			riList.push_back(row);
+		}
+	}
+
+	return (riList);
+}
 //Test Code	
 //GREEN_ReturnPixels(img3)
 	
