@@ -4,6 +4,7 @@
 #include "sisocks.h"
 
 //#include "pch.h"
+#include <sstream>
 #include "ImageProcessModel.h"
 #include <numeric>
 #include <iostream>
@@ -41,8 +42,28 @@ double ReturnSum(vector<double>);
 void thresh_callback(int, void*);
 void conv2(Mat src, int kernel_size);
 void print(vector<int> const &input);
+vector<vector<string>> GetFiles(const string directory);
 int main()
 {
+	//vector<string> filenames;
+	vector<vector<string>> filenames = GetFiles("images/BinRushed2/");
+
+
+	
+
+	Mat tst1 = imread(filenames[0][1],IMREAD_GRAYSCALE);
+	Mat tst2 = imread(filenames[0][0], IMREAD_GRAYSCALE);
+
+
+
+	const char* test_window = "6-1";
+	namedWindow(test_window, WINDOW_NORMAL);
+	const char* test_window2 = "6-0";
+	namedWindow(test_window2, WINDOW_NORMAL);
+
+	imshow(test_window, tst1);
+	imshow(test_window2, tst2);
+
 	UnitTests ut;
 	//
 	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
@@ -65,33 +86,18 @@ int main()
 	retImgMarked.SetType(marked);
 	
 
+
 	Mat retresult = retImgMarked.DisplayImage();
 	cout << "before";
 	initsocks();
 	cout << "after"<<endl ;
 
-	Rconnection *rc = new Rconnection();
-	
-	cout << "rc " << rc <<endl;
-
-	int ic = rc->connect();
-
-	cout << "i = " << ic << endl;
-	Rvector* src = (Rvector*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RServeFunctions.r')");
-
-	vector<int> pixelArray;
 
 	const uint8_t* pixelPtr = (uint8_t*)img3.data;
 	int cn = img3.channels();
 	Scalar_<uint8_t> bgrPixel;
 	vector<double> xiList;
 	vector<double> yiList;
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	xiList.push_back(i);
-	//	yiList.push_back(i);
-	//}
 
 	for (int i = 0; i < img3.rows -2; i++)
 	{
@@ -109,10 +115,7 @@ int main()
 			{
 				xiList.push_back(i);
 				yiList.push_back(j);
-
-				//cout << xiList.at(i) << endl;
 			}
-
 		}
 	}
 	ofstream out_xi("data/pixels/xi2.csv");
@@ -123,57 +126,50 @@ int main()
 	for (const auto &e : yiList) out_yi << e << ",\n";
 	out_yi.close();
 
-	double* arr1 = new double[xiList.size()];
-	double* arr2 = new double[yiList.size()];
-
-	//cout << arr[0] << endl;
-	copy(xiList.begin(), xiList.end(), arr1);	
-	Rdouble* r_xiList = new Rdouble(arr1,xiList.size());
-
-	copy(yiList.begin(), yiList.end(), arr2);
-	Rdouble* r_yiList = new Rdouble(arr2, yiList.size());
-
-	//Rvector *iris = (Rvector*)rc->eval("data(iris); iris");
-	
-	src = (Rvector*)rc ->eval("xi<-TestCSV();xi");
-	if (!src) { cout << "oops! couldn't get rv data\n"; delete rc; return 0; }
-
-	//if (!rv) { cout << "oops! couldn't get data\n"; delete rc; return 0; }
-	Rdouble *sw = (Rdouble*)src->byName("xi");
-	double *swd = sw->doubleArray();
-
-	// and print it ...
-	{int i = 0, ct = sw->length(); while (i < ct){cout << swd[i++] << " ";}; cout << "\n"; }
-
-	cout << "r_xiList:	" << * r_xiList->doubleArray()<<endl;
-	cout << "r_yiList:	" << *r_yiList->doubleArray() << endl;
-
-	rc->assign("xi", r_xiList);
-	rc->assign("yi", r_yiList);
-
-	Rdouble* r_vec = (Rdouble*)rc->eval("HCluster_C(xi,yi)");
-	rc->eval("");
-
-	
 	cv::setBreakOnError(true);
 
-
-	/*conv2(img, 100);
-	int g1[3] = {0, 0, 0};*/
-
-	const char* retinal_window = "retImage";
-	namedWindow(retinal_window, WINDOW_NORMAL);
-	imshow(retinal_window, img3);
-
 	Mat result = imread("TestImg.tif");
-
-
 	CircleFit circlefit;
 	
-	delete rc;
-
 	waitKey();
 	return 0;
+}
+
+
+vector<vector<string>> GetFiles(const string directory)
+{
+	vector<vector<string>> filenames;
+
+	for (int i = 1; i < 47; i++)
+	{
+
+		for (int j = 1; j < 7; j++)
+		{
+
+			vector<string> row;
+			string prime;
+			string marked;
+
+			marked = directory + "image" + to_string(i) + "-" + to_string(j) + ".jpg";
+			prime = directory + "image" + to_string(i) + "prime.jpg";
+
+			row.push_back(prime);
+			row.push_back(marked);
+
+			filenames.push_back(row);
+		}
+	}
+
+	for (int i = 0;i < filenames.size();i++)
+	{
+		for (int j = 0; j < filenames[i].size();j++)
+		{
+			
+			cout<< i << ", " << j <<": " << filenames[i][j] << endl;
+		}
+	}
+
+	return (filenames);
 }
 
 //Test Code	
@@ -194,6 +190,48 @@ int main()
 	//cout << result;
 	//namedWindow("image", WINDOW_NORMAL);
 	//imshow("image", result);
+
+
+	/*Rconnection *rc = new Rconnection();
+
+	cout << "rc " << rc <<endl;
+
+	int ic = rc->connect();
+
+	cout << "i = " << ic << endl;
+	Rvector* src = (Rvector*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RServeFunctions.r')");
+
+	vector<int> pixelArray;
+	double* arr1 = new double[xiList.size()];
+	//double* arr2 = new double[yiList.size()];
+
+	////cout << arr[0] << endl;
+	//copy(xiList.begin(), xiList.end(), arr1);	
+	//Rdouble* r_xiList = new Rdouble(arr1,xiList.size());
+
+	//copy(yiList.begin(), yiList.end(), arr2);
+	//Rdouble* r_yiList = new Rdouble(arr2, yiList.size());
+
+	////Rvector *iris = (Rvector*)rc->eval("data(iris); iris");
+	//
+	//src = (Rvector*)rc ->eval("xi<-TestCSV();xi");
+	//if (!src) { cout << "oops! couldn't get rv data\n"; delete rc; return 0; }
+
+	////if (!rv) { cout << "oops! couldn't get data\n"; delete rc; return 0; }
+	//Rdouble *sw = (Rdouble*)src->byName("xi");
+	//double *swd = sw->doubleArray();
+
+	//// and print it ...
+	//{int i = 0, ct = sw->length(); while (i < ct){cout << swd[i++] << " ";}; cout << "\n"; }
+
+	//cout << "r_xiList:	" << * r_xiList->doubleArray()<<endl;
+	//cout << "r_yiList:	" << *r_yiList->doubleArray() << endl;
+
+	//rc->assign("xi", r_xiList);
+	//rc->assign("yi", r_yiList);
+
+	//Rdouble* r_vec = (Rdouble*)rc->eval("HCluster_C(xi,yi)");
+	//rc->eval("");*/
 
 void print(vector<int> const &input)
 {

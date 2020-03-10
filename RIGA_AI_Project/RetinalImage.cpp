@@ -1,11 +1,6 @@
 #include "RetinalImage.h"
 
 
-//RetinalImage::RetinalImage(string imageSource)
-//{
-//	SetFilepath(imageSource);
-//
-//};
 void RetinalImage::SetType(int _type)
 {
 	type = _type;

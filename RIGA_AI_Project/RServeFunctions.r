@@ -196,12 +196,10 @@ CF_cluster2CSV<-CircleFitFull(Cluster2$xi,Cluster2$yi)
 
 plot(draw.circle(testFull$xc,testFull$yc,testFull$radius))
 
-plot(draw.circle(CF_cluster1CSV$xc,CF_cluster1CSV$yc,CF_cluster1CSV$radius))
-plot(draw.circle(CF_cluster2CSV$uc,CF_cluster2CSV$vc,CF_cluster2CSV$radius))
+plot(draw.circle(CF_cluster1CSV$xc,CF_cluster1CSV$yc,CF_cluster1CSV$radius));draw.circle(CF_cluster2CSV$xc,CF_cluster2CSV$yc,CF_cluster2CSV$radius)
 
 plot(c(1,1))
 
-draw.circle(CF_cluster2CSV$xc,CF_cluster2CSV$yc,CF_cluster2CSV$radius)
 # IMPORT AND EXPORT CSV
 ExportToCSV<-function(df,filename)
 {
@@ -228,6 +226,9 @@ BindXY_CSV<-function(x,y)
   colnames(df)<-c("xi","yi")
   return(df)
 }
+
+
+
 
 HCluster_C2<-function(df)
 {
