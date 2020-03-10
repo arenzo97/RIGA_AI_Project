@@ -73,6 +73,11 @@ yc <- vc + ybar;
 
 radius <- sqrt(uc*uc + vc*vc + (suu+svv)/N);
 
+
+
 print(xc);
 print(yc);
 print(radius);
+
+
+data("iris")

@@ -77,7 +77,7 @@ int main()
 	int ic = rc->connect();
 
 	cout << "i = " << ic << endl;
-	Rconnection* src = (Rconnection*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RServeFunctions.r')");
+	Rvector* src = (Rvector*)rc->eval("source('C:/Projects/CS3072/FinalYearProject/RIGA_AI_Project/RIGA_AI_Project/RServeFunctions.r')");
 
 	vector<int> pixelArray;
 
@@ -115,25 +115,35 @@ int main()
 
 		}
 	}
-	ofstream out_xi("data/pixels/xi.csv");
-	for (const auto &e : xiList) out_xi << e << "\n";
+	ofstream out_xi("data/pixels/xi2.csv");
+	for (const auto &e : xiList) out_xi << e << ",\n";
 	out_xi.close();
 
-	ofstream out_yi("data/pixels/yi.csv");
-	for (const auto &e : yiList) out_yi << e << "\n";
+	ofstream out_yi("data/pixels/yi2.csv");
+	for (const auto &e : yiList) out_yi << e << ",\n";
 	out_yi.close();
 
 	double* arr1 = new double[xiList.size()];
 	double* arr2 = new double[yiList.size()];
 
-
-	
 	//cout << arr[0] << endl;
 	copy(xiList.begin(), xiList.end(), arr1);	
 	Rdouble* r_xiList = new Rdouble(arr1,xiList.size());
 
 	copy(yiList.begin(), yiList.end(), arr2);
 	Rdouble* r_yiList = new Rdouble(arr2, yiList.size());
+
+	//Rvector *iris = (Rvector*)rc->eval("data(iris); iris");
+	
+	src = (Rvector*)rc ->eval("xi<-TestCSV();xi");
+	if (!src) { cout << "oops! couldn't get rv data\n"; delete rc; return 0; }
+
+	//if (!rv) { cout << "oops! couldn't get data\n"; delete rc; return 0; }
+	Rdouble *sw = (Rdouble*)src->byName("xi");
+	double *swd = sw->doubleArray();
+
+	// and print it ...
+	{int i = 0, ct = sw->length(); while (i < ct){cout << swd[i++] << " ";}; cout << "\n"; }
 
 	cout << "r_xiList:	" << * r_xiList->doubleArray()<<endl;
 	cout << "r_yiList:	" << *r_yiList->doubleArray() << endl;
@@ -144,16 +154,6 @@ int main()
 	Rdouble* r_vec = (Rdouble*)rc->eval("HCluster_C(xi,yi)");
 	rc->eval("");
 
-	if (r_vec)
-	{
-		double *d = r_vec->doubleArray();
-		int ci = 0, ct = r_vec->length();
-		while (ci < ct)
-		{
-			cout << d[ci++] << " " << endl;
-		}
-		delete r_vec;
-	}
 	
 	cv::setBreakOnError(true);
 
