@@ -59,16 +59,23 @@ void RetinalImageSubtracted::ExportToCSV(string filePath)
 	}
 
 	//Output to CSV
-	string xi_filePath = filePath + retinalName +"_xi.csv";
-	string yi_filePath = filePath + retinalName + "_yi.csv";
+	string xi_filePath = filePath + retinalName +"_values.csv";
+	//string yi_filePath = filePath + retinalName + "_yi.csv";
 
-	ofstream out_xi(xi_filePath);
-	for (const auto &e : xiList) out_xi << e << "\n";
-	out_xi.close();
+	ofstream out_csvi(xi_filePath);
 
-	ofstream out_yi(yi_filePath);
-	for (const auto &e : yiList) out_yi << e << "\n";
-	out_yi.close();
+	for (int i = 0; i < xiList.size();i++)
+	{
+		out_csvi << retinalName << "," << xiList.at(i) << "," << yiList.at(i) << endl;
+	}
+	out_csvi.close();
+	//for (const auto &e : xiList) out_xi << e << "\n";
+	//	//out_xi.close();
+	////ofstream out_yi(yi_filePath);
+	//for (const auto &e : yiList) out_xi << e << "\n";
+	//out_xi.close();
+
+	
 };
 
 void RetinalImageSubtracted::SetRetinalName(string x)

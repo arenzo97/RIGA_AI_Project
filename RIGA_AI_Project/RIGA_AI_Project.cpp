@@ -199,7 +199,7 @@ vector<RetinalImageSubtracted> GetRetinalImages(const string directory)
 		for (int j = 1; j < 7; j++)
 		{
 			
-			string iter = to_string(i) + "-" + to_string(j);
+			string iter = to_string(i) + "_" + to_string(j);
 			
 			string prime;
 			string marked;
