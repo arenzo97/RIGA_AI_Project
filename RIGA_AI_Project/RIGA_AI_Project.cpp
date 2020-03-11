@@ -43,7 +43,7 @@ void thresh_callback(int, void*);
 void conv2(Mat src, int kernel_size);
 void print(vector<int> const &input);
 vector<vector<string>> GetFiles(const string directory);
-vector<vector<RetinalImage>> GetRetinalImages(const string directory);
+vector<RetinalImageSubtracted> GetRetinalImages(const string directory);
 
 int main()
 {
@@ -58,11 +58,20 @@ int main()
 	Mat tst2 = imread(filenames[0][0], IMREAD_GRAYSCALE);
 	
 
-	vector<vector<RetinalImage>> riList = GetRetinalImages("images/BinRushed2/");
+	vector<RetinalImageSubtracted> riList = GetRetinalImages("images/BinRushed2/");
 
-	RetinalImage riTest = riList[0][0];
+	
 
-	cout<< "riList Tests : \n" << riTest.GetFilepath() <<endl;
+	for (int i = 0; i < 10;i++)
+	{
+		RetinalImageSubtracted riTest = riList[i];
+		string folderpath = "data/pixels/test/";
+		riTest.ExportToCSV(folderpath);
+
+	}
+	
+	Mat tst3 = riList[0].DisplayImage();
+	//cout<< "riList Tests : \n" << riTest.GetFilepath() <<endl;
 
 
 	const char* test_window = "6-1";
@@ -70,16 +79,22 @@ int main()
 	const char* test_window2 = "6-0";
 	namedWindow(test_window2, WINDOW_NORMAL);
 
+	const char* test_window3 = "RetinalImageSubtracted";
+	namedWindow(test_window3, WINDOW_NORMAL);
+
 	imshow(test_window, tst1);
 	imshow(test_window2, tst2);
-
+	imshow(test_window3,tst3);
 	
 	//
 	Mat img = imread("image1-1.tif", IMREAD_GRAYSCALE);
 	Mat img2 = imread("image1prime.tif", IMREAD_GRAYSCALE);
 
-	Mat img3 = abs(img - img2);
+	//Mat img3 = tst3;
+	Mat img3 = abs(img-img2);
 
+
+	//threshold(img3,img3,3,255,0);
 	bool ut_CIRCLE_FIT_RETURN_SxRETURN = ut.CIRCLE_FIT_RETURN_SxRETURN();
 	cout << "UNIT TEST:" <<endl
 	<< "SxReturn:		" << ut_CIRCLE_FIT_RETURN_SxRETURN << endl 
@@ -119,10 +134,11 @@ int main()
 			int* g = (int*)bgrPixel.val[1];
 			int* r = (int*)bgrPixel.val[2];
 
-			if ((g != 000000) || (r != 000000) || (b != 000000) )
+			if ((g != 0) ||(r != 0) || (b != 0) )
 			{
 				xiList.push_back(i);
 				yiList.push_back(j);
+				//cout << "R: " << r << "G:" << g << "B: " << b << endl;
 			}
 		}
 	}
@@ -155,8 +171,6 @@ vector<vector<string>> GetFiles(const string directory)
 
 		for (int j = 1; j < 7; j++)
 		{
-			RetinalImage ri();
-
 			vector<string> row;
 			string prime;
 			string marked;
@@ -175,9 +189,9 @@ vector<vector<string>> GetFiles(const string directory)
 }
 
 
-vector<vector<RetinalImage>> GetRetinalImages(const string directory)
+vector<RetinalImageSubtracted> GetRetinalImages(const string directory)
 {
-	vector<vector<RetinalImage>> riList;
+	vector<RetinalImageSubtracted> riList;
 
 	for (int i = 1; i < 10; i++)
 	{
@@ -185,8 +199,8 @@ vector<vector<RetinalImage>> GetRetinalImages(const string directory)
 		for (int j = 1; j < 7; j++)
 		{
 			
-
-			vector<RetinalImage> row;
+			string iter = to_string(i) + "-" + to_string(j);
+			
 			string prime;
 			string marked;
 
@@ -194,11 +208,10 @@ vector<vector<RetinalImage>> GetRetinalImages(const string directory)
 			prime = directory + "image" + to_string(i) + "prime.jpg";
 			RetinalImage ri_marked(marked);
 			RetinalImage ri_prime(prime);
+			RetinalImageSubtracted subtracted(iter,marked,prime);
 
-			row.push_back(marked);
-			row.push_back(prime);
-
-			riList.push_back(row);
+			
+			riList.push_back(subtracted);
 		}
 	}
 

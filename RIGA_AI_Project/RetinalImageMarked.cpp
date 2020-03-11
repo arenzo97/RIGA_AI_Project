@@ -5,18 +5,34 @@ RetinalImageSubtracted::RetinalImageSubtracted()
 
 };
 
-RetinalImageSubtracted::RetinalImageSubtracted(Mat marked, Mat prime)
+RetinalImageSubtracted::RetinalImageSubtracted(string name, string primeFilePath, string markedFilePath)
 {
+	SetRetinalName(name);
+	Mat marked = imread(markedFilePath,IMREAD_GRAYSCALE);
+
+	//resize(marked, marked, marked.size(),0.1,0.1);
+	Mat prime = imread(primeFilePath, IMREAD_GRAYSCALE);
+	//resize(prime, prime, prime.size(), 0.1, 0.1);
 	img = abs(marked - prime);
+
+
+	
 
 };
 
 void RetinalImageSubtracted::ExportToCSV(string filePath)
 {
 	//Get Pixels
+	threshold(img, img, 20, 255, 0);
 	const uint8_t* pixelPtr = (uint8_t*)img.data;
 	int cn = img.channels();
 	Scalar_<uint8_t> bgrPixel;
+	string imgName_filePath = filePath + retinalName + ".txt";
+
+	ofstream imgName(imgName_filePath);
+	imgName << retinalName;
+	imgName.close();
+
 	vector<double> xiList;
 	vector<double> yiList;
 
@@ -36,16 +52,26 @@ void RetinalImageSubtracted::ExportToCSV(string filePath)
 			{
 				xiList.push_back(i);
 				yiList.push_back(j);
+
+				
 			}
 		}
 	}
 
 	//Output to CSV
-	ofstream out_xi(filePath);
-	for (const auto &e : xiList) out_xi << e << ",\n";
+	string xi_filePath = filePath + retinalName +"_xi.csv";
+	string yi_filePath = filePath + retinalName + "_yi.csv";
+
+	ofstream out_xi(xi_filePath);
+	for (const auto &e : xiList) out_xi << e << "\n";
 	out_xi.close();
 
-	ofstream out_yi(filePath);
-	for (const auto &e : yiList) out_yi << e << ",\n";
+	ofstream out_yi(yi_filePath);
+	for (const auto &e : yiList) out_yi << e << "\n";
 	out_yi.close();
+};
+
+void RetinalImageSubtracted::SetRetinalName(string x)
+{
+	retinalName = x;
 };

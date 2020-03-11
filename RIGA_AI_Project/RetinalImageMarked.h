@@ -3,12 +3,17 @@
 
 class RetinalImageSubtracted : public RetinalImage
 {
+
+private:
+	string retinalName;
 public:
 	RetinalImageSubtracted();
-	RetinalImageSubtracted(Mat prime, Mat marked);
+	RetinalImageSubtracted(string name, string primeFilePath, string markedFilePath);
+	void ExportToCSV(string filePath);
 
 
 private:
-	void ExportToCSV(string filePath);
+	void SetRetinalName(string x);
+	
 
 };

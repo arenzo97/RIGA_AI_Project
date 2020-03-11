@@ -210,8 +210,13 @@ ExportToCSV<-function(df,filename)
 xi_csv = read.csv('data/pixels/xi.csv', sep=",",header = FALSE)
 yi_csv = read.csv('data/pixels/yi.csv', sep=",",header = FALSE)
 
+
+xi_csv1 = read.csv('data/pixels/test/1-2_xi.csv', sep=",",header = FALSE)
+yi_csv1 = read.csv('data/pixels/test/1-2_yi.csv', sep=",",header = FALSE)
+csvdf1 <- BindXY_CSV(xi_csv1,yi_csv1)
+
 csvdf <- BindXY_CSV(xi_csv,yi_csv)
-csvdf_bind<-HCluster_C2(csvdf)
+csvdf_bind<-HCluster_C2(csvdf1)
 Cluster1<-ReturnClusterXY(csvdf_bind,1)
 Cluster2<-ReturnClusterXY(csvdf_bind,2)
 
