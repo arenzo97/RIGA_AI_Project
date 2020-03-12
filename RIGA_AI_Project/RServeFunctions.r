@@ -206,14 +206,22 @@ CF_cluster2CSV<-CircleFitFull(Cluster2$xi,Cluster2$yi)
 
 plot(draw.circle(testFull$xc,testFull$yc,testFull$radius))
 
-plot(draw.circle(CF_cluster1CSV$xc,CF_cluster1CSV$yc,CF_cluster1CSV$radius));draw.circle(CF_cluster2CSV$xc,CF_cluster2CSV$yc,CF_cluster2CSV$radius)
+test_df<-as.data.frame(test_df)
+ExportToCSV(test_df,"test_full.csv")
+plot(1,1)
 
-plot(c(1,1))
+test_df2=read.csv('data/test_full2.csv', sep=",",header = TRUE)
+
+plot(0,0,type = "n", xlim = c(0,2376), ylim = c(0,1584))
+draw.circle(test_df2$xc1,test_df2$yc1,test_df2$radius1)
+draw.circle(test_df2$xc2,test_df2$yc2,test_df2$radius2)
+
+
 
 # IMPORT AND EXPORT CSV
 ExportToCSV<-function(df,filename)
 {
-  write.csv(df,paste0("data/",filename),row.names = FALSE)
+  write.csv(df,paste0("data/",filename),row.names = FALSE,quote = FALSE)
 }
 
 
@@ -246,22 +254,25 @@ return(combined.df)
 }
 
 uniqueVals <- unique(CombinedCSV$id)
+
+uniqueVals<-as.character(uniqueVals)
 df_sub<-c()
 hc_df<-c()
-
+uniqueVals
 cf_df<-c()
-
-
 df<-subset(CombinedCSV,id %in% uniqueVals[9])
-hc_df<-c(hc_df,HCluster_C2(df))
-cf<-c(uniqueVals[9])
-cf<-CircleFitFull2(uniqueVals[9],df$xi,df$yi)
+
+test_df<-HCluster_C3(uniqueVals[9],df)
+
+hc_df<-c(hc_df,HCluster_C(df))
+cf=uniqueVals
+cf<-CircleFitFull3(uniqueVals[9],df$xi,df$yi)
 
 for (i in 1:length(uniqueVals))
 {
   df<-subset(CombinedCSV,id %in% uniqueVals[i])
   cf<-c(uniqueVals[i])
-  cf<-CircleFitFull2(uniqueVals[i],df$xi,df$yi)
+  cf<-HCluster_C3(uniqueVals[i],df)
   
   cf_df<-rbind(cf_df,cf)
 #  hc_df<-c(hc_df,HCluster_C2(df))
@@ -283,7 +294,51 @@ BindXY_CSV<-function(x,y)
   return(df)
 }
 
+HCluster_C3<-function(id,df)
+{
+  
+  result = cbind(df$xi,df$yi)
+  
+  
+  clusters <- hclust(dist(result),method="single");
+  clusters <- cutree(clusters,2);
+  #df$clusters=clusters
+  
+  
+  plot(result[,1],result[,2], col = clusters);
+  hc_df<-cbind(clusters,df)
+  c1<-subset(hc_df,clusters==1)
+  c2<-subset(hc_df,clusters==2)
+  
+  cf1<-CircleFitFull(c1$xi,c1$yi)
+  cf2<-CircleFitFull(c2$xi,c2$yi)
+  
+  result<-cbind(id,cf1$xc,cf1$yc,cf1$radius,cf2$xc,cf2$yc,cf2$radius)
+  colnames(result)<-c("id","xc1","yc1","radius1","xc2","yc2","radius2")
+#c1 <- CircleFitFull3(df$id,df$xi,df$yi)
+  
+  
+  return(result);
+}
+CircleFitFull3<-function(id,xi,yi)
+{
+  cf_raw <- CircleFitRawValues(xi,yi)
+  cf_summed<-CircleFitSummed(cf_raw)
+  cf_centre<-CircleFitMatrix(cf_summed)
+  radius<-ReturnRadius(cf_centre,nrow(cf_raw))
+  
+  #as.double()
+  cf_result<-cbind(id,cf_centre$xc,cf_centre$yc,radius)
+  colnames(cf_result) <-c("id","xi","yi","radius")
+  return(cf_result)
+}
 
+ReturnClusterXY<-function(df,cluster_value)
+{
+  result <- subset(df,df$clusters == cluster_value)
+  
+  return(result)
+}
 
 
 HCluster_C2<-function(df)
