@@ -178,6 +178,16 @@ CircleFitFull<-function(xi,yi)
   cf_result<-cbind(cf_centre,radius)
   return(cf_result)
 }
+CircleFitFull2<-function(id,xi,yi)
+{
+  cf_raw <- CircleFitRawValues(xi,yi)
+  cf_summed<-CircleFitSummed(cf_raw)
+  cf_centre<-CircleFitMatrix(cf_summed)
+  radius<-ReturnRadius(cf_centre,nrow(cf_raw))
+  
+  cf_result<-cbind(id,cf_centre,radius)
+  return(cf_result)
+}
 
 
 #CIRCLE FIT TEST RESULTS
@@ -211,7 +221,7 @@ xi_csv = read.csv('data/pixels/xi.csv', sep=",",header = FALSE)
 yi_csv = read.csv('data/pixels/yi.csv', sep=",",header = FALSE)
 
 
-xi_csv1 = read.csv('data/pixels/test/1-2_xi.csv', sep=",",header = FALSE)
+csv1 = read.csv('data/pixels/test/1_2_values.csv', sep=",",header = FALSE)
 yi_csv1 = read.csv('data/pixels/test/1-2_yi.csv', sep=",",header = FALSE)
 csvdf1 <- BindXY_CSV(xi_csv1,yi_csv1)
 
@@ -221,6 +231,47 @@ Cluster1<-ReturnClusterXY(csvdf_bind,1)
 Cluster2<-ReturnClusterXY(csvdf_bind,2)
 
 xi_df
+
+CombinedCSV<-ReturnCombinedCSV("data/pixels/test/")
+
+ReturnCombinedCSV<-function(directory)
+{
+fileList <- list.files (path =directory,pattern = "*.csv")
+fullpath<-file.path('data/pixels/test',fileList)
+tables <- lapply(fullpath, read.csv, header = FALSE)
+combined.df <- do.call(rbind , tables)
+colnames(combined.df) <-c("id","xi","yi")
+
+return(combined.df)
+}
+
+uniqueVals <- unique(CombinedCSV$id)
+df_sub<-c()
+hc_df<-c()
+
+cf_df<-c()
+
+
+df<-subset(CombinedCSV,id %in% uniqueVals[9])
+hc_df<-c(hc_df,HCluster_C2(df))
+cf<-c(uniqueVals[9])
+cf<-CircleFitFull2(uniqueVals[9],df$xi,df$yi)
+
+for (i in 1:length(uniqueVals))
+{
+  df<-subset(CombinedCSV,id %in% uniqueVals[i])
+  cf<-c(uniqueVals[i])
+  cf<-CircleFitFull2(uniqueVals[i],df$xi,df$yi)
+  
+  cf_df<-rbind(cf_df,cf)
+#  hc_df<-c(hc_df,HCluster_C2(df))
+  #as.data.frame(hc_df)
+  #print(CombinedCSV$id[i])
+}
+
+out <- subset(CombinedCSV,id %in% uniqueVals[1])
+
+hc_df
 
 BindXY_CSV<-function(x,y)
 {
