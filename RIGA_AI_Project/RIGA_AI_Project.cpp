@@ -70,7 +70,7 @@ int main()
 
 	}
 	
-	Mat tst3 = riList[0].DisplayImage();
+	Mat tst3 = riList[10].DisplayImage();
 	//cout<< "riList Tests : \n" << riTest.GetFilepath() <<endl;
 
 

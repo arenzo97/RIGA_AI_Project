@@ -14,7 +14,7 @@ RetinalImageSubtracted::RetinalImageSubtracted(string name, string primeFilePath
 	Mat prime = imread(primeFilePath, IMREAD_GRAYSCALE);
 	//resize(prime, prime, prime.size(), 0.1, 0.1);
 	img = abs(marked - prime);
-
+	threshold(img, img, 50, 255, 0);
 
 	
 
@@ -23,7 +23,7 @@ RetinalImageSubtracted::RetinalImageSubtracted(string name, string primeFilePath
 void RetinalImageSubtracted::ExportToCSV(string filePath)
 {
 	//Get Pixels
-	threshold(img, img, 20, 255, 0);
+	//threshold(img, img, 50, 255, 0);
 	const uint8_t* pixelPtr = (uint8_t*)img.data;
 	int cn = img.channels();
 	Scalar_<uint8_t> bgrPixel;
