@@ -14,7 +14,7 @@ RetinalImageSubtracted::RetinalImageSubtracted(string name, string primeFilePath
 	Mat prime = imread(primeFilePath, IMREAD_GRAYSCALE);
 	//resize(prime, prime, prime.size(), 0.1, 0.1);
 	img = abs(marked - prime);
-	threshold(img, img, 50, 255, 0);
+	threshold(img, img, 47, 255, 0);
 
 	
 

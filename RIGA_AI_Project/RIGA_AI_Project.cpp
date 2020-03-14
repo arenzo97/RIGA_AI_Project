@@ -44,6 +44,7 @@ void conv2(Mat src, int kernel_size);
 void print(vector<int> const &input);
 vector<vector<string>> GetFiles(const string directory);
 vector<RetinalImageSubtracted> GetRetinalImages(const string directory);
+vector<RetinalImage> GetRetinalPrime(const string directory);
 
 int main()
 {
@@ -59,18 +60,32 @@ int main()
 	
 
 	vector<RetinalImageSubtracted> riList = GetRetinalImages("images/BinRushed2/");
+	vector<RetinalImage> rPrimeList = GetRetinalPrime("images/BinRushed2/"); //Get prime images into a list
 
-	
-
-	for (int i = 0; i < 10;i++)
+	for (int i = 0; i < 276;i++)
 	{
+		//
 		RetinalImageSubtracted riTest = riList[i];
-		string folderpath = "data/pixels/test/";
+		string folderpath = "data/pixels/BinRushed2/";
 		riTest.ExportToCSV(folderpath);
+
 
 	}
 	
-	Mat tst3 = riList[10].DisplayImage();
+	for (int i = 1; i < 47;i++)
+	{
+		RetinalImage prime = rPrimeList[i];
+
+		Mat outRi;
+		string outFilepath = "images/BinRushed2/resized/image" + to_string(i) + "prime.jpg";
+
+		resize(prime.DisplayImage(), outRi, Size(), 0.1, 0.1, INTER_LINEAR);
+		imwrite(outFilepath, outRi);
+
+		//delete &prime;
+	}
+
+	Mat tst3 = riList[30].DisplayImage();
 	//cout<< "riList Tests : \n" << riTest.GetFilepath() <<endl;
 
 
@@ -122,36 +137,36 @@ int main()
 	vector<double> xiList;
 	vector<double> yiList;
 
-	for (int i = 0; i < img3.rows -2; i++)
-	{
-		for (int j = 0; j < img3.cols -2; j++)
-		{
-			bgrPixel.val[0] = pixelPtr[i*img3.cols*cn + j * cn + 0]; // B
-			bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
-			bgrPixel.val[2] = pixelPtr[i*img3.cols*cn + j * cn + 2]; // R
+	//for (int i = 0; i < img3.rows -2; i++)
+	//{
+	//	for (int j = 0; j < img3.cols -2; j++)
+	//	{
+	//		bgrPixel.val[0] = pixelPtr[i*img3.cols*cn + j * cn + 0]; // B
+	//		bgrPixel.val[1] = pixelPtr[i*img3.cols*cn + j * cn + 1]; // G
+	//		bgrPixel.val[2] = pixelPtr[i*img3.cols*cn + j * cn + 2]; // R
 
-			int*b = (int*)bgrPixel.val[0];
-			int* g = (int*)bgrPixel.val[1];
-			int* r = (int*)bgrPixel.val[2];
+	//		int*b = (int*)bgrPixel.val[0];
+	//		int* g = (int*)bgrPixel.val[1];
+	//		int* r = (int*)bgrPixel.val[2];
 
-			if ((g != 0) ||(r != 0) || (b != 0) )
-			{
-				xiList.push_back(i);
-				yiList.push_back(j);
-				//cout << "R: " << r << "G:" << g << "B: " << b << endl;
-			}
-		}
-	}
+	//		if ((g != 0) ||(r != 0) || (b != 0) )
+	//		{
+	//			xiList.push_back(i);
+	//			yiList.push_back(j);
+	//			//cout << "R: " << r << "G:" << g << "B: " << b << endl;
+	//		}
+	//	}
+	//}
 
 	//Output to CSV
-	ofstream out_xi("data/pixels/xi2.csv");
+	/*ofstream out_xi("data/pixels/xi2.csv");
 	for (const auto &e : xiList) out_xi << e << ",\n";
 	out_xi.close();
 
 	ofstream out_yi("data/pixels/yi2.csv");
 	for (const auto &e : yiList) out_yi << e << ",\n";
 	out_yi.close();
-
+*/
 	cv::setBreakOnError(true);
 
 	Mat result = imread("TestImg.tif");
@@ -189,11 +204,24 @@ vector<vector<string>> GetFiles(const string directory)
 }
 
 
+vector<RetinalImage> GetRetinalPrime(const string directory)
+{
+	vector<RetinalImage> riList;
+	for (int i =0;i< 47;i++)
+	{
+		string primeFilepath = directory + "image" + to_string(i) + "prime.jpg";
+		RetinalImage prime(primeFilepath);
+		riList.push_back(prime);
+
+	}
+	return (riList);
+}
+
 vector<RetinalImageSubtracted> GetRetinalImages(const string directory)
 {
 	vector<RetinalImageSubtracted> riList;
 
-	for (int i = 1; i < 10; i++)
+	for (int i = 1; i < 60; i++)
 	{
 
 		for (int j = 1; j < 7; j++)

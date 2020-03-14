@@ -213,8 +213,8 @@ plot(1,1)
 test_df2=read.csv('data/test_full2.csv', sep=",",header = TRUE)
 
 plot(0,0,type = "n", xlim = c(0,2376), ylim = c(0,1584))
-draw.circle(test_df2$xc1,test_df2$yc1,test_df2$radius1)
-draw.circle(test_df2$xc2,test_df2$yc2,test_df2$radius2)
+draw.circle(cf_df_resized$xc1,cf_df_resized$yc1,cf_df_resized$radius1)
+draw.circle(cf_df_resized$xc2,cf_df_resized$yc2,cf_df_resized$radius2)
 
 
 
@@ -240,45 +240,27 @@ Cluster2<-ReturnClusterXY(csvdf_bind,2)
 
 xi_df
 
-CombinedCSV<-ReturnCombinedCSV("data/pixels/test/")
+
 
 ReturnCombinedCSV<-function(directory)
 {
 fileList <- list.files (path =directory,pattern = "*.csv")
-fullpath<-file.path('data/pixels/test',fileList)
+fullpath<-file.path('data/pixels/MagrabiMale',fileList)
 tables <- lapply(fullpath, read.csv, header = FALSE)
 combined.df <- do.call(rbind , tables)
 colnames(combined.df) <-c("id","xi","yi")
 
 return(combined.df)
 }
-
-uniqueVals <- unique(CombinedCSV$id)
-
-uniqueVals<-as.character(uniqueVals)
-df_sub<-c()
-hc_df<-c()
-uniqueVals
-cf_df<-c()
 df<-subset(CombinedCSV,id %in% uniqueVals[9])
 
 test_df<-HCluster_C3(uniqueVals[9],df)
 
 hc_df<-c(hc_df,HCluster_C(df))
-cf=uniqueVals
+
 cf<-CircleFitFull3(uniqueVals[9],df$xi,df$yi)
 
-for (i in 1:length(uniqueVals))
-{
-  df<-subset(CombinedCSV,id %in% uniqueVals[i])
-  cf<-c(uniqueVals[i])
-  cf<-HCluster_C3(uniqueVals[i],df)
-  
-  cf_df<-rbind(cf_df,cf)
-#  hc_df<-c(hc_df,HCluster_C2(df))
-  #as.data.frame(hc_df)
-  #print(CombinedCSV$id[i])
-}
+
 
 out <- subset(CombinedCSV,id %in% uniqueVals[1])
 
@@ -293,7 +275,65 @@ BindXY_CSV<-function(x,y)
   colnames(df)<-c("xi","yi")
   return(df)
 }
-
+CircleFitSummed2<-function(df)
+{
+  Sx <- sum(df$xi)/10
+  Sy <- sum(df$yi)/10
+  
+  Suu <- sum(df$uu)/10
+  Svv <- sum(df$vv)/10
+  Suv <- sum(df$uv)/10
+  Svu <- sum(df$vu)/10
+  
+  Suuu <- sum(df$uuu)/10
+  Svvv <- sum(df$vvv)/10
+  Suvv <- sum(df$uvv)/10
+  Svuu <- sum(df$vuu)/10
+  
+  numRows<-nrow(df)
+  
+  summedarray <- cbind(Sx,Sy,Suu,Svv,Suv,Svu,Suuu,Svvv,Suvv,Svuu,numRows)
+  summeddf <- as.data.frame(summedarray)
+  
+  return(summeddf)
+}
+CircleFitFull4<-function(xi,yi)
+{
+  cf_raw <- CircleFitRawValues(xi,yi)
+  cf_summed<-CircleFitSummed2(cf_raw)
+  cf_centre<-CircleFitMatrix(cf_summed)
+  radius<-ReturnRadius(cf_centre,nrow(cf_raw))
+  
+  cf_result<-cbind(cf_centre,radius)
+  return(cf_result)
+}
+HCluster_C4<-function(id,df)
+{
+  
+  result = cbind(df$xi,df$yi)
+  
+  
+  clusters <- hclust(dist(result),method="single");
+  clusters <- cutree(clusters,2);
+  #df$clusters=clusters
+  
+  
+  plot(result[,1],result[,2], main = id,col = clusters);
+  hc_df<-cbind(clusters,df)
+  c1<-subset(hc_df,clusters==1)
+  c2<-subset(hc_df,clusters==2)
+  
+  cf1<-CircleFitFull4(c1$xi,c1$yi)
+  cf2<-CircleFitFull4(c2$xi,c2$yi)
+  
+  result<-cbind(id,cf1$xc,cf1$yc,cf1$radius,cf2$xc,cf2$yc,cf2$radius)
+  colnames(result)<-c("id","xc1","yc1","radius1","xc2","yc2","radius2")
+  
+  #c1 <- CircleFitFull3(df$id,df$xi,df$yi)
+  
+  
+  return(result);
+}
 HCluster_C3<-function(id,df)
 {
   
@@ -305,7 +345,7 @@ HCluster_C3<-function(id,df)
   #df$clusters=clusters
   
   
-  plot(result[,1],result[,2], col = clusters);
+  plot(result[,1],result[,2],title=id ,col = clusters);
   hc_df<-cbind(clusters,df)
   c1<-subset(hc_df,clusters==1)
   c2<-subset(hc_df,clusters==2)
@@ -381,3 +421,26 @@ UNIT_TEST_ReturnSx<-function(xy,uv)
   else return(FALSE)
 }
 
+
+CombinedCSV<-ReturnCombinedCSV("data/pixels/MagrabiMale/")
+uniqueVals <- unique(CombinedCSV$id)
+
+uniqueVals<-as.character(uniqueVals)
+df_sub<-c()
+hc_df<-c()
+uniqueVals
+cf_df<-c()
+
+cf_df_resized<-c()
+
+for (i in 1:10)
+{
+  df<-subset(CombinedCSV,id %in% uniqueVals[i])
+  cf<-c(uniqueVals[i])
+  cf<-HCluster_C4(uniqueVals[i],df)
+  
+  cf_df<-rbind(cf_df,cf)
+  #  hc_df<-c(hc_df,HCluster_C2(df))
+  #as.data.frame(hc_df)
+  #print(CombinedCSV$id[i])
+}
